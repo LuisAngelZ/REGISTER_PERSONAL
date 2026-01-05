@@ -1,0 +1,13 @@
+{
+    "python.defaultInterpreterPath": "C:\\Python314\\python.exe",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python",
+        "editor.formatOnSave": true
+    },
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/backend"
+    ],
+    "python.analysis.stubPath": "${workspaceFolder}/.vscode/typings"
+}
