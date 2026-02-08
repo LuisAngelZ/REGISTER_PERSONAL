@@ -7,7 +7,7 @@ from app.database.db import get_db
 from app.models.personal import Personal
 from pydantic import BaseModel
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, date
 
 router = APIRouter(prefix="/api/personal", tags=["Personal"])
 
@@ -16,24 +16,25 @@ class PersonalCreate(BaseModel):
     nombre: str
     apellido: str
     documento: str
-    email: Optional[str] = None
     puesto: Optional[str] = None
-    departamento: Optional[str] = None
-    user_id: Optional[int] = None
-    dias_trabajo: Optional[str] = "Lunes,Martes,Miércoles,Jueves,Viernes"
+    turno: Optional[str] = "mañana"
     hora_entrada: Optional[str] = "08:00"
     hora_salida: Optional[str] = "17:00"
+    fecha_inicio: Optional[date] = None
+    duracion_contrato: Optional[str] = "3_meses"
+    dia_libre: Optional[str] = "domingo"
 
 class PersonalUpdate(BaseModel):
     nombre: Optional[str] = None
     apellido: Optional[str] = None
     documento: Optional[str] = None
-    email: Optional[str] = None
     puesto: Optional[str] = None
-    departamento: Optional[str] = None
-    dias_trabajo: Optional[str] = None
+    turno: Optional[str] = None
     hora_entrada: Optional[str] = None
     hora_salida: Optional[str] = None
+    fecha_inicio: Optional[date] = None
+    duracion_contrato: Optional[str] = None
+    dia_libre: Optional[str] = None
     activo: Optional[bool] = None
 
 class PersonalResponse(BaseModel):
@@ -42,14 +43,15 @@ class PersonalResponse(BaseModel):
     nombre: str
     apellido: str
     documento: str
-    email: Optional[str]
     puesto: Optional[str]
-    departamento: Optional[str]
-    dias_trabajo: str
+    turno: Optional[str]
     hora_entrada: str
     hora_salida: str
+    fecha_inicio: Optional[date]
+    duracion_contrato: Optional[str]
+    fecha_fin: Optional[date]
+    dia_libre: Optional[str]
     activo: bool
-    fecha_ingreso: datetime
 
     class Config:
         from_attributes = True
@@ -59,26 +61,34 @@ class PersonalResponse(BaseModel):
 def crear_personal(personal: PersonalCreate, db: Session = Depends(get_db)):
     """Crear un nuevo registro de personal"""
     try:
-        # Verificar si el documento ya existe
         db_personal = db.query(Personal).filter(Personal.documento == personal.documento).first()
         if db_personal:
             raise HTTPException(status_code=400, detail="El documento ya existe")
-        
+
         nuevo_personal = Personal(
             nombre=personal.nombre,
             apellido=personal.apellido,
             documento=personal.documento,
-            email=personal.email,
             puesto=personal.puesto,
-            departamento=personal.departamento,
-            user_id=personal.user_id,
-            dias_trabajo=personal.dias_trabajo,
+            turno=personal.turno,
             hora_entrada=personal.hora_entrada,
-            hora_salida=personal.hora_salida
+            hora_salida=personal.hora_salida,
+            fecha_inicio=personal.fecha_inicio,
+            duracion_contrato=personal.duracion_contrato,
+            dia_libre=personal.dia_libre,
         )
+        # Calcular fecha_fin automaticamente
+        nuevo_personal.calcular_fecha_fin()
+
         db.add(nuevo_personal)
         db.commit()
         db.refresh(nuevo_personal)
+
+        # user_id = id (auto-incremental)
+        nuevo_personal.user_id = nuevo_personal.id
+        db.commit()
+        db.refresh(nuevo_personal)
+
         return nuevo_personal
     except HTTPException:
         raise
@@ -99,7 +109,7 @@ def obtener_todos(
         query = db.query(Personal)
         if activos:
             query = query.filter(Personal.activo == True)
-        
+
         personal = query.offset(skip).limit(limit).all()
         return personal
     except Exception as e:
@@ -145,12 +155,15 @@ def actualizar_personal(
         personal = db.query(Personal).filter(Personal.id == personal_id).first()
         if not personal:
             raise HTTPException(status_code=404, detail="Personal no encontrado")
-        
-        # Actualizar solo los campos proporcionados
+
         update_data = personal_update.dict(exclude_unset=True)
         for field, value in update_data.items():
             setattr(personal, field, value)
-        
+
+        # Recalcular fecha_fin si cambio fecha_inicio o duracion_contrato
+        if "fecha_inicio" in update_data or "duracion_contrato" in update_data:
+            personal.calcular_fecha_fin()
+
         personal.fecha_actualizacion = datetime.utcnow()
         db.commit()
         db.refresh(personal)
@@ -169,7 +182,7 @@ def eliminar_personal(personal_id: int, db: Session = Depends(get_db)):
         personal = db.query(Personal).filter(Personal.id == personal_id).first()
         if not personal:
             raise HTTPException(status_code=404, detail="Personal no encontrado")
-        
+
         personal.activo = False
         personal.fecha_actualizacion = datetime.utcnow()
         db.commit()
@@ -188,7 +201,7 @@ def obtener_estadisticas(db: Session = Depends(get_db)):
         total = db.query(Personal).count()
         activos = db.query(Personal).filter(Personal.activo == True).count()
         inactivos = db.query(Personal).filter(Personal.activo == False).count()
-        
+
         return {
             "total": total,
             "activos": activos,
@@ -199,35 +212,41 @@ def obtener_estadisticas(db: Session = Depends(get_db)):
 
 # ASISTENCIA
 @router.get("/{personal_id}/asistencia")
-def obtener_asistencia_personal(personal_id: int, db: Session = Depends(get_db)):
+def obtener_asistencia_personal(
+    personal_id: int,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
     """Obtener registros de asistencia de un personal"""
     from app.models.asistencia import Asistencia
-    
+
     try:
-        # Verificar que el personal existe
         personal = db.query(Personal).filter(Personal.id == personal_id).first()
         if not personal:
             raise HTTPException(status_code=404, detail="Personal no encontrado")
-        
-        # Obtener registros de asistencia
+
+        total = db.query(Asistencia).filter(
+            Asistencia.personal_id == personal_id
+        ).count()
+
         registros = db.query(Asistencia).filter(
             Asistencia.personal_id == personal_id
-        ).order_by(Asistencia.fecha_hora.desc()).limit(30).all()
-        
+        ).order_by(Asistencia.fecha_hora.desc()).limit(limit).all()
+
         registros_formateados = []
         for reg in registros:
             registros_formateados.append({
                 "id": reg.id,
                 "tipo": reg.tipo,
                 "fecha_hora": reg.fecha_hora.isoformat() if reg.fecha_hora else None,
-                "dispositivo_ip": reg.dispositivo_ip
+                "dispositivo_ip": reg.dispositivo_ip,
             })
-        
+
         return {
             "personal_id": personal_id,
             "nombre": f"{personal.nombre} {personal.apellido}",
-            "total_registros": len(registros),
-            "registros": registros_formateados
+            "total_registros": total,
+            "registros": registros_formateados,
         }
     except HTTPException:
         raise

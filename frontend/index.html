@@ -3,8 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Registro de Personal - ZKTeco</title>
+    <title>Sistema de Registro de Personal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --white: #ffffff;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #22c55e;
+            --success-bg: #f0fdf4;
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --warning: #f59e0b;
+            --warning-bg: #fffbeb;
+            --info: #3b82f6;
+            --info-bg: #eff6ff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,509 +38,1383 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--slate-100);
+            color: var(--slate-800);
             min-height: 100vh;
+        }
+
+        /* ============ LOGIN SCREEN ============ */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--slate-900);
             padding: 20px;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
+        .login-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 48px 40px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
         }
 
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
+        .login-header {
             text-align: center;
+            margin-bottom: 32px;
         }
 
-        header h1 {
-            margin-bottom: 10px;
-            font-size: 2.5em;
+        .login-header .icon-circle {
+            width: 72px;
+            height: 72px;
+            background: var(--slate-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 32px;
         }
 
-        header p {
-            opacity: 0.9;
+        .login-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 6px;
         }
 
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 30px;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .card {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            border: 1px solid #e9ecef;
-        }
-
-        .card h2 {
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
+        .login-header p {
+            color: var(--slate-500);
+            font-size: 0.85rem;
+            line-height: 1.5;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
-        label {
+        .form-group label {
             display: block;
-            margin-bottom: 5px;
-            color: #555;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--slate-600);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--slate-200);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            color: var(--slate-800);
+            background: var(--slate-50);
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        select.form-input {
+            cursor: pointer;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--slate-800);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--slate-700);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .btn-accent:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--slate-500);
+            border: 1.5px solid var(--slate-200);
+        }
+
+        .btn-ghost:hover {
+            background: var(--slate-50);
+            color: var(--slate-700);
+        }
+
+        .btn-sm {
+            padding: 7px 14px;
+            font-size: 0.78rem;
+            border-radius: 8px;
+            width: auto;
+        }
+
+        .btn-success { background: var(--success); color: var(--white); }
+        .btn-success:hover { background: #16a34a; }
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-info { background: var(--slate-500); color: var(--white); }
+        .btn-info:hover { background: var(--slate-600); }
+
+        .login-status {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            min-height: 20px;
+        }
+
+        .login-status.conectando { color: var(--warning); }
+        .login-status.error { color: var(--danger); }
+        .login-status.success { color: var(--success); }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+            color: var(--slate-400);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--slate-200);
+        }
+
+        /* ============ MAIN APP ============ */
+        .main-app {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .main-app.visible {
+            display: block;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--slate-900);
+            color: var(--white);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .navbar-brand span {
+            color: var(--slate-400);
+            font-weight: 400;
+            font-size: 0.85rem;
+        }
+
+        .device-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
             font-weight: 500;
         }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: border-color 0.3s;
+        .device-pill.online {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
         }
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        .device-pill.offline {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
         }
 
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 5px;
+        .device-pill.connecting {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+        }
+
+        .pill-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .pill-dot.green { background: #4ade80; }
+        .pill-dot.red { background: #f87171; }
+        .pill-dot.yellow { background: #fbbf24; }
+
+        /* Section Navigation */
+        .section-nav {
+            background: var(--white);
+            border-bottom: 1px solid var(--slate-200);
+            padding: 0 24px;
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+        }
+
+        .nav-item {
+            padding: 14px 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--slate-500);
             cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            font-family: inherit;
+            width: auto;
+            border-radius: 0;
+        }
+
+        .nav-item:hover {
+            color: var(--slate-800);
+            background: var(--slate-50);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .nav-item.active {
+            color: var(--slate-900);
+            border-bottom-color: var(--slate-900);
             font-weight: 600;
-            transition: transform 0.2s;
-            width: 100%;
-            margin-top: 10px;
         }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        /* Content */
+        .content {
+            padding: 24px;
+            max-width: 1300px;
+            margin: 0 auto;
         }
 
-        button.secondary {
-            background: #6c757d;
-            margin-left: 5px;
+        .section {
+            display: none;
         }
 
-        .stats {
+        .section.active {
+            display: block;
+        }
+
+        /* Stats */
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--slate-200);
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--slate-500);
+            margin-bottom: 6px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            border: 1px solid var(--slate-200);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--slate-100);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--slate-800);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Personnel Grid */
+        .personnel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .person-card {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .person-card:hover {
+            border-color: var(--slate-300);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .person-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .person-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--slate-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--slate-600);
+        }
+
+        .person-status {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .person-status.active {
+            background: var(--success-bg);
+            color: #16a34a;
+        }
+
+        .person-status.inactive {
+            background: var(--danger-bg);
+            color: #dc2626;
+        }
+
+        .person-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--slate-900);
+            margin-bottom: 4px;
+        }
+
+        .person-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 14px;
+        }
+
+        .person-meta span {
+            font-size: 0.8rem;
+            color: var(--slate-500);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .person-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            background: var(--slate-100);
+            color: var(--slate-600);
+        }
+
+        .tag.uid {
+            background: var(--info-bg);
+            color: var(--info);
+        }
+
+        .person-actions {
+            display: flex;
+            gap: 8px;
+            padding-top: 14px;
+            border-top: 1px solid var(--slate-100);
+        }
+
+        .person-actions .btn-sm {
+            flex: 1;
+        }
+
+        /* Search */
+        .search-bar {
+            position: relative;
             margin-bottom: 20px;
         }
 
-        @media (max-width: 768px) {
-            .stats {
+        .search-bar input {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            border: 1.5px solid var(--slate-200);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: var(--white);
+            color: var(--slate-800);
+            transition: all 0.2s;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-bar::before {
+            content: '\1F50D';
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+        }
+
+        /* Alerts */
+        .alert-container {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 380px;
+        }
+
+        .alert {
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            animation: slideRight 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes slideRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .alert-success {
+            background: var(--success-bg);
+            color: #166534;
+            border-left: 3px solid var(--success);
+        }
+
+        .alert-error {
+            background: var(--danger-bg);
+            color: #991b1b;
+            border-left: 3px solid var(--danger);
+        }
+
+        .alert-info {
+            background: var(--info-bg);
+            color: #1e40af;
+            border-left: 3px solid var(--info);
+        }
+
+        /* Forms Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-grid .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        /* Connection section */
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .connection-status {
+            margin-top: 16px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 16px;
+            max-width: 650px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--slate-100);
+        }
+
+        .modal-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .modal-header p {
+            font-size: 0.8rem;
+            color: var(--slate-500);
+            margin-top: 4px;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--slate-100);
+        }
+
+        /* Attendance Table */
+        .att-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .att-table th {
+            text-align: left;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--slate-500);
+            padding: 10px 12px;
+            background: var(--slate-50);
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .att-table td {
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--slate-100);
+            color: var(--slate-700);
+        }
+
+        .badge-entrada {
+            background: var(--success-bg);
+            color: #16a34a;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-salida {
+            background: var(--danger-bg);
+            color: #dc2626;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid var(--slate-200);
+            border-top-color: var(--slate-600);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--slate-400);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 1024px) {
+            .config-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        .stat-item {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            border-left: 4px solid #667eea;
-        }
-
-        .stat-item h3 {
-            color: #667eea;
-            font-size: 2em;
-            margin: 10px 0;
-        }
-
-        .stat-item p {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        th {
-            background: #667eea;
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        tr:hover {
-            background: #f8f9fa;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-        }
-
-        .btn-small {
-            padding: 5px 10px;
-            font-size: 12px;
-            margin: 0;
-            width: auto;
-        }
-
-        .btn-edit {
-            background: #28a745;
-        }
-
-        .btn-delete {
-            background: #dc3545;
-        }
-
-        .btn-test {
-            background: #17a2b8;
-        }
-
-        .alert {
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .personnel-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .navbar-brand span {
+                display: none;
+            }
+
+            .device-pill span.pill-text {
+                display: none;
+            }
+
+            .section-nav {
+                padding: 0 12px;
+            }
+
+            .nav-item {
+                padding: 12px 14px;
+                font-size: 0.8rem;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .login-card {
+                padding: 32px 24px;
+            }
+
+            .alert-container {
+                right: 12px;
+                left: 12px;
+                max-width: none;
+            }
+
+            .person-actions {
+                flex-wrap: wrap;
+            }
+
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
             }
         }
 
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+        @media (max-width: 480px) {
+            .navbar {
+                height: 52px;
+            }
 
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+            .navbar-brand {
+                font-size: 0.85rem;
+            }
 
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
+            .section-nav {
+                gap: 0;
+            }
 
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+            .nav-item {
+                padding: 10px 12px;
+                font-size: 0.75rem;
+            }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .tabs {
-            display: flex;
-            border-bottom: 2px solid #e9ecef;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            padding: 12px 20px;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            background: none;
-            width: auto;
-            color: #666;
-            font-weight: 500;
-            transition: all 0.3s;
-            margin: 0;
-        }
-
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .search-box {
-            margin-bottom: 15px;
-        }
-
-        .info-box {
-            background: #e7f3ff;
-            border-left: 4px solid #2196F3;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
+            .person-card {
+                padding: 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📱 Sistema de Registro de Personal</h1>
-            <p>Gestión de asistencia con dispositivos ZKTeco</p>
-        </header>
 
-        <div class="main-content">
-            <!-- Panel Izquierdo: Formularios -->
-            <div class="card">
-                <h2>📝 Gestión de Personal</h2>
-                <div id="alerts"></div>
+    <!-- ============ LOGIN SCREEN ============ -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="icon-circle">&#128274;</div>
+                <h1>Acceso al Sistema</h1>
+                <p>Conecta tu dispositivo biometrico ZKTeco para ingresar</p>
+            </div>
 
-                <div class="tabs">
-                    <button class="tab active" onclick="switchTab('crear')">Crear</button>
-                    <button class="tab" onclick="switchTab('editar')">Editar</button>
-                    <button class="tab" onclick="switchTab('conexion')">Conexión</button>
+            <div class="form-group">
+                <label>IP del Dispositivo</label>
+                <input type="text" class="form-input" id="loginIp" placeholder="192.168.100.200" onkeypress="if(event.key==='Enter')intentarConexion()">
+            </div>
+            <div class="form-group">
+                <label>Puerto</label>
+                <input type="number" class="form-input" id="loginPuerto" value="4370" min="1" max="65535" onkeypress="if(event.key==='Enter')intentarConexion()">
+            </div>
+            <div class="form-group">
+                <label>Clave de Comunicacion</label>
+                <input type="number" class="form-input" id="loginPassword" value="0" onkeypress="if(event.key==='Enter')intentarConexion()">
+            </div>
+
+            <button class="btn btn-primary" id="btnConectar" onclick="intentarConexion()" style="margin-top:20px;">Conectar</button>
+
+            <div class="login-divider">o</div>
+
+            <button class="btn btn-ghost" onclick="entrarSinDispositivo()">Entrar sin dispositivo</button>
+
+            <div id="loginStatus" class="login-status"></div>
+        </div>
+    </div>
+
+    <!-- ============ MAIN APP ============ -->
+    <div id="mainApp" class="main-app">
+
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                &#9881; Registro de Personal <span>| ZKTeco</span>
+            </div>
+            <div id="devicePill" class="device-pill connecting">
+                <span class="pill-dot yellow"></span>
+                <span class="pill-text" id="devicePillText">Conectando...</span>
+            </div>
+        </nav>
+
+        <!-- Section Navigation -->
+        <div class="section-nav">
+            <button class="nav-item active" onclick="switchSection('personal', this)">Personal</button>
+            <button class="nav-item" onclick="switchSection('registrar', this)">Registrar</button>
+            <button class="nav-item" onclick="switchSection('editar-section', this)">Editar</button>
+            <button class="nav-item" onclick="switchSection('configuracion', this)">Configuracion</button>
+        </div>
+
+        <!-- Alert container -->
+        <div id="alerts" class="alert-container"></div>
+
+        <!-- Content -->
+        <div class="content">
+
+            <!-- ====== SECTION: Personal ====== -->
+            <div id="personal" class="section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Personal</div>
+                        <div class="stat-value" id="totalPersonal">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Activos</div>
+                        <div class="stat-value" id="activosPersonal">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Inactivos</div>
+                        <div class="stat-value" id="inactivosPersonal">-</div>
+                    </div>
                 </div>
 
-                <!-- Tab: Crear Personal -->
-                <div id="crear" class="tab-content active">
-                    <form id="formCrear" onsubmit="crearPersonal(event)">
-                        <div class="form-group">
-                            <label>Nombre</label>
-                            <input type="text" id="nombre" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Apellido</label>
-                            <input type="text" id="apellido" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Documento</label>
-                            <input type="text" id="documento" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" id="email">
-                        </div>
-                        <div class="form-group">
-                            <label>Puesto</label>
-                            <input type="text" id="puesto">
-                        </div>
-                        <div class="form-group">
-                            <label>Departamento</label>
-                            <input type="text" id="departamento">
-                        </div>
-                        <div class="form-group">
-                            <label>Días de Trabajo</label>
-                            <input type="text" id="diasTrabajo" value="Lunes,Martes,Miércoles,Jueves,Viernes">
-                        </div>
-                        <div class="form-group">
-                            <label>Hora Entrada (HH:MM)</label>
-                            <input type="time" id="horaEntrada" value="08:00">
-                        </div>
-                        <div class="form-group">
-                            <label>Hora Salida (HH:MM)</label>
-                            <input type="time" id="horaSalida" value="17:00">
-                        </div>
-                        <div class="form-group">
-                            <label>ID Usuario ZKTeco (opcional)</label>
-                            <input type="number" id="user_id">
-                        </div>
-                        <button type="submit">Crear Personal</button>
-                    </form>
+                <div class="search-bar">
+                    <input type="text" id="filtroNombre" placeholder="Buscar por CI o nombre..." oninput="cargarPersonal()">
                 </div>
 
-                <!-- Tab: Editar Personal -->
-                <div id="editar" class="tab-content">
-                    <div class="form-group">
-                        <label>Buscar personal por ID</label>
-                        <input type="number" id="buscarId" placeholder="ID del personal">
-                        <button onclick="buscarPersonal()" style="margin-top: 5px;">Buscar</button>
+                <div id="personnelContainer" class="personnel-grid">
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <div class="spinner"></div>
+                        <p style="margin-top:12px;">Cargando personal...</p>
                     </div>
-                    <form id="formEditar" onsubmit="actualizarPersonal(event)" style="display:none;">
-                        <div class="form-group">
-                            <label>Nombre</label>
-                            <input type="text" id="editNombre">
-                        </div>
-                        <div class="form-group">
-                            <label>Apellido</label>
-                            <input type="text" id="editApellido">
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" id="editEmail">
-                        </div>
-                        <div class="form-group">
-                            <label>Puesto</label>
-                            <input type="text" id="editPuesto">
-                        </div>
-                        <div class="form-group">
-                            <label>Departamento</label>
-                            <input type="text" id="editDepartamento">
-                        </div>
-                        <button type="submit">Actualizar</button>
-                        <button type="button" class="secondary" onclick="cancelarEdicion()">Cancelar</button>
-                    </form>
-                </div>
-
-                <!-- Tab: Conexión ZKTeco -->
-                <div id="conexion" class="tab-content">
-                    <div class="info-box">
-                        <strong>Conexión a dispositivo ZKTeco</strong>
-                        <p>Configura la IP del dispositivo y sincroniza datos</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>IP del Dispositivo ZKTeco</label>
-                        <input type="text" id="ipZkteco" placeholder="192.168.1.100" value="192.168.1.100">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Puerto</label>
-                        <input type="number" id="puertoZkteco" placeholder="4370" value="4370" min="1" max="65535">
-                    </div>
-                    
-                    <button onclick="testConexion()" style="margin-bottom: 10px;">🔌 Probar Conexión</button>
-                    <div id="conexionStatus"></div>
-
-                    <h3 style="margin-top: 20px; margin-bottom: 10px;">Sincronizar Datos del Dispositivo</h3>
-                    <button onclick="sincronizarUsuarios()" style="margin-bottom: 5px;">👥 Importar Usuarios</button>
-                    <button onclick="sincronizarRegistros()">📊 Importar Registros Asistencia</button>
-                    <div id="syncStatus" style="margin-top: 10px;"></div>
                 </div>
             </div>
 
-            <!-- Panel Derecho: Estadísticas y Listado -->
-            <div class="card">
-                <h2>📊 Estadísticas y Listado</h2>
-                
-                <div class="stats" id="stats">
-                    <div class="stat-item">
-                        <p>Total Personal</p>
-                        <h3 id="totalPersonal">-</h3>
+            <!-- ====== SECTION: Registrar ====== -->
+            <div id="registrar" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Nuevo Personal</h3>
                     </div>
-                    <div class="stat-item">
-                        <p>Activos</p>
-                        <h3 id="activosPersonal">-</h3>
+                    <div class="card-body">
+                        <form id="formCrear" onsubmit="crearPersonal(event)">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" class="form-input" id="nombre" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Apellido</label>
+                                    <input type="text" class="form-input" id="apellido" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Carnet de Identidad (CI)</label>
+                                    <input type="text" class="form-input" id="documento" required placeholder="Ej: 12345678">
+                                </div>
+                                <div class="form-group">
+                                    <label>Puesto de Trabajo</label>
+                                    <select class="form-input" id="puesto">
+                                        <option value="cajero">Cajero</option>
+                                        <option value="mesero">Mesero</option>
+                                        <option value="cocinero">Cocinero</option>
+                                        <option value="lavaplatos">Lavaplatos</option>
+                                        <option value="servidora">Servidora</option>
+                                        <option value="guardia">Guardia</option>
+                                        <option value="despacho">Despacho</option>
+                                        <option value="otros">Otros</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Turno</label>
+                                    <select class="form-input" id="turno" onchange="cambiarTurno(this.value, 'horaEntrada', 'horaSalida')">
+                                        <option value="mañana">Manana (08:00 - 17:00)</option>
+                                        <option value="tarde">Tarde (13:00 - 22:00)</option>
+                                        <option value="especial">Especial (12:00 - 21:00)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dia Libre</label>
+                                    <select class="form-input" id="diaLibre">
+                                        <option value="lunes">Lunes</option>
+                                        <option value="martes">Martes</option>
+                                        <option value="miercoles">Miercoles</option>
+                                        <option value="jueves">Jueves</option>
+                                        <option value="viernes">Viernes</option>
+                                        <option value="sabado">Sabado</option>
+                                        <option value="domingo" selected>Domingo</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Hora Entrada</label>
+                                    <input type="time" class="form-input" id="horaEntrada" value="08:00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Hora Salida</label>
+                                    <input type="time" class="form-input" id="horaSalida" value="17:00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Fecha de Inicio</label>
+                                    <input type="date" class="form-input" id="fechaInicio" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Duracion del Contrato</label>
+                                    <select class="form-input" id="duracionContrato" onchange="calcularFechaFin('fechaInicio','duracionContrato','fechaFin')">
+                                        <option value="3_meses">3 Meses (85 dias)</option>
+                                        <option value="6_meses">6 Meses (180 dias)</option>
+                                        <option value="1_anio">1 Ano (365 dias)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full">
+                                    <label>Ultimo Dia de Trabajo (calculado)</label>
+                                    <input type="date" class="form-input" id="fechaFin" readonly style="background:var(--slate-100);color:var(--slate-500);">
+                                </div>
+                            </div>
+                            <div class="form-actions" style="margin-top:20px;">
+                                <button type="submit" class="btn btn-primary">Guardar Personal</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="stat-item">
-                        <p>Inactivos</p>
-                        <h3 id="inactivosPersonal">-</h3>
-                    </div>
-                </div>
-
-                <div class="search-box">
-                    <input type="text" id="filtroNombre" placeholder="Filtrar por nombre...">
-                    <button onclick="cargarPersonal()" style="margin-top: 5px;">🔍 Filtrar</button>
-                </div>
-
-                <div class="table-container">
-                    <table id="tablaPersonal">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Documento</th>
-                                <th>Puesto</th>
-                                <th>Horario</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cuerpoTabla">
-                            <tr><td colspan="7" style="text-align:center">Cargando...</td></tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
+
+            <!-- ====== SECTION: Editar ====== -->
+            <div id="editar-section" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Editar Personal</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>ID del Personal</label>
+                                <input type="number" class="form-input" id="buscarId" placeholder="Ingresa el ID">
+                            </div>
+                            <div class="form-group" style="display:flex;align-items:flex-end;">
+                                <button class="btn btn-primary" onclick="buscarPersonal()" style="margin:0;">Buscar</button>
+                            </div>
+                        </div>
+
+                        <form id="formEditar" onsubmit="actualizarPersonal(event)" style="display:none; margin-top:24px; padding-top:24px; border-top:1px solid var(--slate-200);">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" class="form-input" id="editNombre">
+                                </div>
+                                <div class="form-group">
+                                    <label>Apellido</label>
+                                    <input type="text" class="form-input" id="editApellido">
+                                </div>
+                                <div class="form-group">
+                                    <label>Puesto de Trabajo</label>
+                                    <select class="form-input" id="editPuesto">
+                                        <option value="cajero">Cajero</option>
+                                        <option value="mesero">Mesero</option>
+                                        <option value="cocinero">Cocinero</option>
+                                        <option value="lavaplatos">Lavaplatos</option>
+                                        <option value="servidora">Servidora</option>
+                                        <option value="guardia">Guardia</option>
+                                        <option value="despacho">Despacho</option>
+                                        <option value="otros">Otros</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Turno</label>
+                                    <select class="form-input" id="editTurno" onchange="cambiarTurno(this.value, 'editHoraEntrada', 'editHoraSalida')">
+                                        <option value="mañana">Manana (08:00 - 17:00)</option>
+                                        <option value="tarde">Tarde (13:00 - 22:00)</option>
+                                        <option value="especial">Especial (12:00 - 21:00)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dia Libre</label>
+                                    <select class="form-input" id="editDiaLibre">
+                                        <option value="lunes">Lunes</option>
+                                        <option value="martes">Martes</option>
+                                        <option value="miercoles">Miercoles</option>
+                                        <option value="jueves">Jueves</option>
+                                        <option value="viernes">Viernes</option>
+                                        <option value="sabado">Sabado</option>
+                                        <option value="domingo">Domingo</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Hora Entrada</label>
+                                    <input type="time" class="form-input" id="editHoraEntrada" value="08:00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Hora Salida</label>
+                                    <input type="time" class="form-input" id="editHoraSalida" value="17:00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Fecha de Inicio</label>
+                                    <input type="date" class="form-input" id="editFechaInicio">
+                                </div>
+                                <div class="form-group">
+                                    <label>Duracion del Contrato</label>
+                                    <select class="form-input" id="editDuracionContrato" onchange="calcularFechaFin('editFechaInicio','editDuracionContrato','editFechaFin')">
+                                        <option value="3_meses">3 Meses (85 dias)</option>
+                                        <option value="6_meses">6 Meses (180 dias)</option>
+                                        <option value="1_anio">1 Ano (365 dias)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full">
+                                    <label>Ultimo Dia de Trabajo (calculado)</label>
+                                    <input type="date" class="form-input" id="editFechaFin" readonly style="background:var(--slate-100);color:var(--slate-500);">
+                                </div>
+                            </div>
+                            <div class="form-actions" style="margin-top:20px;">
+                                <button type="submit" class="btn btn-primary">Actualizar</button>
+                                <button type="button" class="btn btn-ghost" onclick="cancelarEdicion()">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== SECTION: Configuracion ====== -->
+            <div id="configuracion" class="section">
+                <div class="config-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Conexion al Dispositivo</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="configInfo" style="background:var(--info-bg);border-left:3px solid var(--info);padding:12px 16px;border-radius:8px;margin-bottom:20px;font-size:0.85rem;color:#1e40af;">
+                                Configura la IP del dispositivo biometrico
+                            </div>
+                            <div class="form-group">
+                                <label>IP del Dispositivo</label>
+                                <input type="text" class="form-input" id="ipZkteco" placeholder="192.168.100.200">
+                            </div>
+                            <div class="form-group">
+                                <label>Puerto</label>
+                                <input type="number" class="form-input" id="puertoZkteco" value="4370" min="1" max="65535">
+                            </div>
+                            <div class="form-group">
+                                <label>Clave de Comunicacion</label>
+                                <input type="number" class="form-input" id="passwordZkteco" value="0">
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-primary" onclick="configurarIP()">Guardar</button>
+                                <button class="btn btn-accent" onclick="testConexion()">Probar Conexion</button>
+                            </div>
+                            <div id="conexionStatus" class="connection-status"></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Importar del Dispositivo</h3>
+                        </div>
+                        <div class="card-body">
+                            <p style="font-size:0.85rem;color:var(--slate-500);margin-bottom:16px;">Importa los usuarios registrados en el biometrico a la base de datos local.</p>
+                            <button class="btn btn-primary" onclick="sincronizarUsuarios()">Importar Usuarios</button>
+                            <div id="syncStatus" class="connection-status"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
         const API_URL = "http://localhost:8000";
         let personalActual = null;
+        let dispositivoConectado = false;
+        let infoDispositivo = null;
 
-        // Inicializar
-        window.addEventListener('load', () => {
-            cargarPersonal();
-            cargarEstadisticas();
+        // ============ INIT ============
+        window.addEventListener('load', async () => {
+            await cargarConfigEnLogin();
         });
 
-        // Mostrar alertas
+        async function cargarConfigEnLogin() {
+            try {
+                const response = await fetch(`${API_URL}/api/zkteco/config`);
+                if (response.ok) {
+                    const config = await response.json();
+                    document.getElementById('loginIp').value = config.ip || '';
+                    document.getElementById('loginPuerto').value = config.puerto || 4370;
+                    document.getElementById('loginPassword').value = config.password || 0;
+                    if (config.guardado && config.ip) {
+                        intentarConexion();
+                    }
+                }
+            } catch (error) {
+                console.error('Error cargando config:', error);
+            }
+        }
+
+        // ============ LOGIN ============
+        async function intentarConexion() {
+            const ip = document.getElementById('loginIp').value.trim();
+            const puerto = parseInt(document.getElementById('loginPuerto').value) || 4370;
+            const password = parseInt(document.getElementById('loginPassword').value) || 0;
+            const statusDiv = document.getElementById('loginStatus');
+            const btn = document.getElementById('btnConectar');
+
+            if (!ip) {
+                statusDiv.className = 'login-status error';
+                statusDiv.textContent = 'Ingresa la IP del dispositivo';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Conectando...';
+            statusDiv.className = 'login-status conectando';
+            statusDiv.innerHTML = '<span class="spinner"></span> Conectando al dispositivo...';
+
+            try {
+                await fetch(`${API_URL}/api/zkteco/configurar-ip`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ip, puerto, password })
+                });
+
+                const response = await fetch(`${API_URL}/api/zkteco/test-conexion`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    dispositivoConectado = true;
+                    infoDispositivo = data.info;
+                    statusDiv.className = 'login-status success';
+                    statusDiv.textContent = 'Conexion exitosa!';
+                    setTimeout(() => entrarAlSistema(), 600);
+                } else {
+                    statusDiv.className = 'login-status error';
+                    statusDiv.textContent = (data.detail || 'Verifica la IP y que el dispositivo este encendido');
+                    btn.disabled = false;
+                    btn.textContent = 'Conectar';
+                }
+            } catch (error) {
+                statusDiv.className = 'login-status error';
+                statusDiv.textContent = 'Error: Verifica que el servidor backend este corriendo';
+                btn.disabled = false;
+                btn.textContent = 'Conectar';
+            }
+        }
+
+        function entrarAlSistema() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').classList.add('visible');
+            cargarConfigGuardada();
+            cargarPersonal();
+            cargarEstadisticas();
+            actualizarDevicePill();
+        }
+
+        function entrarSinDispositivo() {
+            dispositivoConectado = false;
+            infoDispositivo = null;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').classList.add('visible');
+            actualizarDevicePill();
+            cargarConfigGuardada();
+            cargarPersonal();
+            cargarEstadisticas();
+        }
+
+        // ============ DEVICE PILL ============
+        function actualizarDevicePill() {
+            const pill = document.getElementById('devicePill');
+            const text = document.getElementById('devicePillText');
+            const dot = pill.querySelector('.pill-dot');
+
+            if (dispositivoConectado && infoDispositivo) {
+                pill.className = 'device-pill online';
+                dot.className = 'pill-dot green';
+                text.textContent = `${infoDispositivo.nombre_dispositivo || 'ZKTeco'} | ${infoDispositivo.usuarios_registrados || 0} usuarios`;
+            } else {
+                pill.className = 'device-pill offline';
+                dot.className = 'pill-dot red';
+                text.textContent = 'Sin dispositivo';
+            }
+        }
+
+        async function refrescarEstadoDispositivo() {
+            try {
+                const response = await fetch(`${API_URL}/api/zkteco/test-conexion`);
+                const data = await response.json();
+                if (response.ok) {
+                    dispositivoConectado = true;
+                    infoDispositivo = data.info;
+                } else {
+                    dispositivoConectado = false;
+                    infoDispositivo = null;
+                }
+            } catch {
+                dispositivoConectado = false;
+                infoDispositivo = null;
+            }
+            actualizarDevicePill();
+        }
+
+        // ============ CONFIG ============
+        async function cargarConfigGuardada() {
+            try {
+                const response = await fetch(`${API_URL}/api/zkteco/config`);
+                if (response.ok) {
+                    const config = await response.json();
+                    document.getElementById('ipZkteco').value = config.ip || '';
+                    document.getElementById('puertoZkteco').value = config.puerto || 4370;
+                    document.getElementById('passwordZkteco').value = config.password || 0;
+                    if (config.guardado) {
+                        document.getElementById('configInfo').innerHTML =
+                            `<strong>Dispositivo configurado</strong> &mdash; ${config.ip}:${config.puerto}`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error cargando config:', error);
+            }
+        }
+
+        // ============ CALCULAR FECHA FIN ============
+        const DURACION_DIAS = {
+            '3_meses': 85,
+            '6_meses': 180,
+            '1_anio': 365,
+        };
+
+        function calcularFechaFin(inputInicioId, selectDuracionId, inputFinId) {
+            const inicio = document.getElementById(inputInicioId).value;
+            const duracion = document.getElementById(selectDuracionId).value;
+            if (!inicio || !duracion) {
+                document.getElementById(inputFinId).value = '';
+                return;
+            }
+            const dias = DURACION_DIAS[duracion] || 85;
+            const fechaInicio = new Date(inicio + 'T00:00:00');
+            fechaInicio.setDate(fechaInicio.getDate() + dias);
+            const y = fechaInicio.getFullYear();
+            const m = String(fechaInicio.getMonth() + 1).padStart(2, '0');
+            const d = String(fechaInicio.getDate()).padStart(2, '0');
+            document.getElementById(inputFinId).value = `${y}-${m}-${d}`;
+        }
+
+        // Auto-calc on date change
+        document.addEventListener('change', (e) => {
+            if (e.target.id === 'fechaInicio' || e.target.id === 'duracionContrato') {
+                calcularFechaFin('fechaInicio', 'duracionContrato', 'fechaFin');
+            }
+            if (e.target.id === 'editFechaInicio' || e.target.id === 'editDuracionContrato') {
+                calcularFechaFin('editFechaInicio', 'editDuracionContrato', 'editFechaFin');
+            }
+        });
+
+        const PUESTOS_LABEL = {
+            'cajero': 'Cajero', 'mesero': 'Mesero', 'cocinero': 'Cocinero',
+            'lavaplatos': 'Lavaplatos', 'servidora': 'Servidora', 'guardia': 'Guardia',
+            'despacho': 'Despacho', 'otros': 'Otros'
+        };
+
+        const DIAS_LABEL = {
+            'lunes': 'Lunes', 'martes': 'Martes', 'miercoles': 'Miercoles',
+            'jueves': 'Jueves', 'viernes': 'Viernes', 'sabado': 'Sabado', 'domingo': 'Domingo'
+        };
+
+        // ============ TURNOS ============
+        const TURNOS_HORARIOS = {
+            'mañana':   { entrada: '08:00', salida: '17:00' },
+            'tarde':    { entrada: '13:00', salida: '22:00' },
+            'especial': { entrada: '12:00', salida: '21:00' },
+        };
+
+        function cambiarTurno(turno, inputEntradaId, inputSalidaId) {
+            const horarios = TURNOS_HORARIOS[turno];
+            if (horarios) {
+                document.getElementById(inputEntradaId).value = horarios.entrada;
+                document.getElementById(inputSalidaId).value = horarios.salida;
+            }
+        }
+
+        // ============ ALERTS ============
         function mostrarAlerta(mensaje, tipo = 'info') {
-            const alertsDiv = document.getElementById('alerts');
+            const container = document.getElementById('alerts');
             const alerta = document.createElement('div');
             alerta.className = `alert alert-${tipo}`;
             alerta.textContent = mensaje;
-            alertsDiv.appendChild(alerta);
+            container.appendChild(alerta);
             setTimeout(() => alerta.remove(), 4000);
         }
 
-        // Cambiar tabs
-        function switchTab(tabName) {
-            // Ocultar todos
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-            
-            // Mostrar el seleccionado
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+        // ============ NAVIGATION ============
+        function switchSection(sectionId, btn) {
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            btn.classList.add('active');
         }
 
-        // CREAR PERSONAL
+        // ============ CREAR PERSONAL ============
         async function crearPersonal(event) {
             event.preventDefault();
-            
+
             const datos = {
                 nombre: document.getElementById('nombre').value,
                 apellido: document.getElementById('apellido').value,
                 documento: document.getElementById('documento').value,
-                email: document.getElementById('email').value || null,
-                puesto: document.getElementById('puesto').value || null,
-                departamento: document.getElementById('departamento').value || null,
-                dias_trabajo: document.getElementById('diasTrabajo').value,
+                puesto: document.getElementById('puesto').value,
+                turno: document.getElementById('turno').value,
                 hora_entrada: document.getElementById('horaEntrada').value,
                 hora_salida: document.getElementById('horaSalida').value,
-                user_id: document.getElementById('user_id').value ? parseInt(document.getElementById('user_id').value) : null
+                fecha_inicio: document.getElementById('fechaInicio').value || null,
+                duracion_contrato: document.getElementById('duracionContrato').value,
+                dia_libre: document.getElementById('diaLibre').value,
             };
 
             try {
@@ -525,17 +1425,37 @@
                 });
 
                 if (!response.ok) throw new Error('Error al crear personal');
-                
-                mostrarAlerta('✅ Personal creado exitosamente', 'success');
+
+                const nuevoPersonal = await response.json();
+                mostrarAlerta('Personal creado exitosamente', 'success');
                 document.getElementById('formCrear').reset();
                 cargarPersonal();
                 cargarEstadisticas();
+
+                if (dispositivoConectado && nuevoPersonal.id) {
+                    try {
+                        const expRes = await fetch(`${API_URL}/api/zkteco/exportar-usuario`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ personal_id: nuevoPersonal.id })
+                        });
+                        const expData = await expRes.json();
+                        if (expRes.ok) {
+                            mostrarAlerta(`Exportado al dispositivo: ${expData.nombre} (UID: ${expData.uid})`, 'success');
+                            cargarPersonal();
+                        } else {
+                            mostrarAlerta('Creado en BD pero no se pudo exportar al dispositivo', 'error');
+                        }
+                    } catch (expErr) {
+                        mostrarAlerta('Creado en BD pero fallo la exportacion', 'error');
+                    }
+                }
             } catch (error) {
-                mostrarAlerta('❌ ' + error.message, 'error');
+                mostrarAlerta('Error: ' + error.message, 'error');
             }
         }
 
-        // BUSCAR PERSONAL
+        // ============ BUSCAR PERSONAL ============
         async function buscarPersonal() {
             const id = document.getElementById('buscarId').value;
             if (!id) {
@@ -546,35 +1466,46 @@
             try {
                 const response = await fetch(`${API_URL}/api/personal/${id}`);
                 if (!response.ok) throw new Error('Personal no encontrado');
-                
+
                 const personal = await response.json();
                 personalActual = personal;
-                
+
                 document.getElementById('editNombre').value = personal.nombre;
                 document.getElementById('editApellido').value = personal.apellido;
-                document.getElementById('editEmail').value = personal.email || '';
-                document.getElementById('editPuesto').value = personal.puesto || '';
-                document.getElementById('editDepartamento').value = personal.departamento || '';
-                
+                document.getElementById('editPuesto').value = personal.puesto || 'otros';
+                document.getElementById('editTurno').value = personal.turno || 'mañana';
+                document.getElementById('editDiaLibre').value = personal.dia_libre || 'domingo';
+                document.getElementById('editHoraEntrada').value = personal.hora_entrada || '08:00';
+                document.getElementById('editHoraSalida').value = personal.hora_salida || '17:00';
+                document.getElementById('editFechaInicio').value = personal.fecha_inicio || '';
+                document.getElementById('editDuracionContrato').value = personal.duracion_contrato || '3_meses';
+                document.getElementById('editFechaFin').value = personal.fecha_fin || '';
+                if (personal.fecha_inicio) {
+                    calcularFechaFin('editFechaInicio', 'editDuracionContrato', 'editFechaFin');
+                }
+
                 document.getElementById('formEditar').style.display = 'block';
-                mostrarAlerta('✅ Personal encontrado', 'success');
+                mostrarAlerta('Personal encontrado: ' + personal.nombre + ' ' + personal.apellido, 'success');
             } catch (error) {
-                mostrarAlerta('❌ ' + error.message, 'error');
+                mostrarAlerta(error.message, 'error');
             }
         }
 
-        // ACTUALIZAR PERSONAL
+        // ============ ACTUALIZAR PERSONAL ============
         async function actualizarPersonal(event) {
             event.preventDefault();
-            
             if (!personalActual) return;
-            
+
             const datos = {
                 nombre: document.getElementById('editNombre').value,
                 apellido: document.getElementById('editApellido').value,
-                email: document.getElementById('editEmail').value || null,
-                puesto: document.getElementById('editPuesto').value || null,
-                departamento: document.getElementById('editDepartamento').value || null
+                puesto: document.getElementById('editPuesto').value,
+                turno: document.getElementById('editTurno').value,
+                dia_libre: document.getElementById('editDiaLibre').value,
+                hora_entrada: document.getElementById('editHoraEntrada').value,
+                hora_salida: document.getElementById('editHoraSalida').value,
+                fecha_inicio: document.getElementById('editFechaInicio').value || null,
+                duracion_contrato: document.getElementById('editDuracionContrato').value,
             };
 
             try {
@@ -585,12 +1516,30 @@
                 });
 
                 if (!response.ok) throw new Error('Error al actualizar');
-                
-                mostrarAlerta('✅ Personal actualizado', 'success');
+                mostrarAlerta('Personal actualizado', 'success');
+
+                if (dispositivoConectado && personalActual.id) {
+                    try {
+                        const expRes = await fetch(`${API_URL}/api/zkteco/exportar-usuario`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ personal_id: personalActual.id })
+                        });
+                        const expData = await expRes.json();
+                        if (expRes.ok) {
+                            mostrarAlerta(`Actualizado en dispositivo: ${expData.nombre}`, 'success');
+                        } else {
+                            mostrarAlerta('Actualizado en BD pero fallo exportar al dispositivo', 'error');
+                        }
+                    } catch (expErr) {
+                        mostrarAlerta('Actualizado en BD pero fallo la exportacion', 'error');
+                    }
+                }
+
                 cancelarEdicion();
                 cargarPersonal();
             } catch (error) {
-                mostrarAlerta('❌ ' + error.message, 'error');
+                mostrarAlerta('Error: ' + error.message, 'error');
             }
         }
 
@@ -600,78 +1549,119 @@
             personalActual = null;
         }
 
-        // CARGAR PERSONAL
+        // ============ CARGAR PERSONAL (CARDS) ============
         async function cargarPersonal() {
             try {
                 const response = await fetch(`${API_URL}/api/personal/`);
                 if (!response.ok) throw new Error('Error al cargar personal');
-                
+
                 const personal = await response.json();
-                const tbody = document.getElementById('cuerpoTabla');
-                tbody.innerHTML = '';
+                const container = document.getElementById('personnelContainer');
 
                 if (personal.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">No hay personal registrado</td></tr>';
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <div class="empty-icon">&#128100;</div>
+                            <p>No hay personal registrado</p>
+                        </div>
+                    `;
                     return;
                 }
 
-                personal.forEach(p => {
-                    const estado = p.activo ? '✅ Activo' : '❌ Inactivo';
-                    const horario = `${p.hora_entrada} - ${p.hora_salida}`;
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${p.id}</td>
-                            <td><strong>${p.nombre} ${p.apellido}</strong></td>
-                            <td>${p.documento}</td>
-                            <td>${p.puesto || '-'}</td>
-                            <td>${horario}</td>
-                            <td>${estado}</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-small btn-edit" onclick="editarPersonal(${p.id})">Editar</button>
-                                    <button class="btn-small btn-test" onclick="verAsistencia(${p.id})">Asistencia</button>
-                                    <button class="btn-small btn-delete" onclick="eliminarPersonal(${p.id})">Eliminar</button>
-                                </div>
-                            </td>
-                        </tr>
+                // Filter by CI or full name
+                const filtro = (document.getElementById('filtroNombre').value || '').toLowerCase();
+                const filtered = filtro
+                    ? personal.filter(p =>
+                        `${p.nombre} ${p.apellido}`.toLowerCase().includes(filtro) ||
+                        (p.documento || '').toLowerCase().includes(filtro)
+                    )
+                    : personal;
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <div class="empty-icon">&#128269;</div>
+                            <p>No se encontraron resultados</p>
+                        </div>
                     `;
-                });
+                    return;
+                }
+
+                const DURACION_LABEL = {'3_meses':'3 Meses','6_meses':'6 Meses','1_anio':'1 Ano'};
+
+                container.innerHTML = filtered.map(p => {
+                    const initials = (p.nombre[0] || '') + (p.apellido[0] || '');
+                    const statusClass = p.activo ? 'active' : 'inactive';
+                    const statusText = p.activo ? 'Activo' : 'Inactivo';
+                    const turnoLabel = {'mañana':'Manana','tarde':'Tarde','especial':'Especial'}[p.turno] || p.turno || '-';
+                    const puestoLabel = PUESTOS_LABEL[p.puesto] || p.puesto || '-';
+                    const diaLibreLabel = DIAS_LABEL[p.dia_libre] || p.dia_libre || '-';
+                    const duracionLabel = DURACION_LABEL[p.duracion_contrato] || '-';
+                    const fechaFinStr = p.fecha_fin ? new Date(p.fecha_fin + 'T00:00:00').toLocaleDateString('es-ES') : '-';
+                    const fechaInicioStr = p.fecha_inicio ? new Date(p.fecha_inicio + 'T00:00:00').toLocaleDateString('es-ES') : '-';
+
+                    return `
+                        <div class="person-card">
+                            <div class="person-top">
+                                <div class="person-avatar">${initials.toUpperCase()}</div>
+                                <span class="person-status ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="person-name">${p.nombre} ${p.apellido}</div>
+                            <div class="person-meta">
+                                <span>&#128179; CI: ${p.documento}</span>
+                                <span>&#128188; ${puestoLabel}</span>
+                                <span>&#128197; ${fechaInicioStr} - ${fechaFinStr}</span>
+                                <span>&#127774; Libre: ${diaLibreLabel}</span>
+                            </div>
+                            <div class="person-tags">
+                                <span class="tag">${turnoLabel}</span>
+                                <span class="tag">${duracionLabel}</span>
+                                ${p.user_id ? `<span class="tag uid">ID: ${p.user_id}</span>` : ''}
+                            </div>
+                            <div class="person-actions">
+                                <button class="btn btn-sm btn-success" onclick="editarPersonal(${p.id})">Editar</button>
+                                <button class="btn btn-sm btn-info" onclick="verAsistencia(${p.id})">Asistencia</button>
+                                <button class="btn btn-sm btn-danger" onclick="eliminarPersonal(${p.id})">Eliminar</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
             } catch (error) {
-                mostrarAlerta('❌ ' + error.message, 'error');
+                mostrarAlerta(error.message, 'error');
             }
         }
 
         function editarPersonal(id) {
             document.getElementById('buscarId').value = id;
             buscarPersonal();
-            switchTab('editar');
+            // Switch to editar section
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('editar-section').classList.add('active');
+            document.querySelectorAll('.nav-item')[2].classList.add('active');
         }
 
-        // ELIMINAR (DESACTIVAR) PERSONAL
+        // ============ ELIMINAR ============
         async function eliminarPersonal(id) {
-            if (!confirm('¿Desactivar este personal?')) return;
+            if (!confirm('Desactivar este personal?')) return;
 
             try {
-                const response = await fetch(`${API_URL}/api/personal/${id}`, {
-                    method: 'DELETE'
-                });
-
+                const response = await fetch(`${API_URL}/api/personal/${id}`, { method: 'DELETE' });
                 if (!response.ok) throw new Error('Error al eliminar');
-                
-                mostrarAlerta('✅ Personal desactivado', 'success');
+                mostrarAlerta('Personal desactivado', 'success');
                 cargarPersonal();
                 cargarEstadisticas();
             } catch (error) {
-                mostrarAlerta('❌ ' + error.message, 'error');
+                mostrarAlerta(error.message, 'error');
             }
         }
 
-        // CARGAR ESTADÍSTICAS
+        // ============ ESTADISTICAS ============
         async function cargarEstadisticas() {
             try {
                 const response = await fetch(`${API_URL}/api/personal/stats/total`);
-                if (!response.ok) throw new Error('Error al cargar estadísticas');
-                
+                if (!response.ok) throw new Error('Error');
                 const stats = await response.json();
                 document.getElementById('totalPersonal').textContent = stats.total;
                 document.getElementById('activosPersonal').textContent = stats.activos;
@@ -681,133 +1671,156 @@
             }
         }
 
-        // TEST CONEXIÓN ZKTECO
-        async function testConexion() {
+        // ============ CONFIGURAR IP ============
+        async function configurarIP() {
             const ip = document.getElementById('ipZkteco').value;
             const puerto = parseInt(document.getElementById('puertoZkteco').value);
+            const password = parseInt(document.getElementById('passwordZkteco').value) || 0;
             const statusDiv = document.getElementById('conexionStatus');
-            statusDiv.innerHTML = '<div class="loading"></div> Probando conexión...';
+
+            if (!ip) {
+                statusDiv.innerHTML = '<div class="alert alert-error" style="margin-top:12px;">Ingresa la IP del dispositivo</div>';
+                return;
+            }
 
             try {
-                const response = await fetch(`${API_URL}/api/zkteco/test-conexion?ip=${ip}&puerto=${puerto}`);
+                const response = await fetch(`${API_URL}/api/zkteco/configurar-ip`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ip, puerto, password })
+                });
                 const data = await response.json();
-                
                 if (response.ok) {
-                    statusDiv.innerHTML = `
-                        <div class="alert alert-success">
-                            <strong>✅ Conexión exitosa</strong><br>
-                            IP: ${data.info.ip}<br>
-                            Puerto: ${data.info.port}
-                        </div>
-                    `;
+                    statusDiv.innerHTML = `<div class="alert alert-success" style="margin-top:12px;">Configuracion guardada: ${ip}:${puerto}</div>`;
+                    document.getElementById('configInfo').innerHTML =
+                        `<strong>Dispositivo configurado</strong> &mdash; ${ip}:${puerto}`;
                 } else {
-                    statusDiv.innerHTML = `<div class="alert alert-error">❌ ${data.detail || 'Error de conexión'}</div>`;
+                    statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${data.detail || 'Error'}</div>`;
                 }
             } catch (error) {
-                statusDiv.innerHTML = `<div class="alert alert-error">❌ ${error.message}</div>`;
+                statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${error.message}</div>`;
             }
         }
 
-        // SINCRONIZAR USUARIOS
-        async function sincronizarUsuarios() {
-            const ip = document.getElementById('ipZkteco').value;
-            const puerto = parseInt(document.getElementById('puertoZkteco').value);
-            const statusDiv = document.getElementById('syncStatus');
-            statusDiv.innerHTML = '<div class="loading"></div> Importando usuarios...';
+        // ============ TEST CONEXION ============
+        async function testConexion() {
+            await configurarIP();
+            const statusDiv = document.getElementById('conexionStatus');
+            statusDiv.innerHTML = '<div style="margin-top:12px;color:var(--slate-500);font-size:0.85rem;"><span class="spinner"></span> Probando conexion...</div>';
 
             try {
-                const response = await fetch(`${API_URL}/api/zkteco/sincronizar-usuarios?ip=${ip}&puerto=${puerto}`, {
-                    method: 'POST'
-                });
+                const response = await fetch(`${API_URL}/api/zkteco/test-conexion`);
                 const data = await response.json();
-                
+
+                if (response.ok) {
+                    const info = data.info;
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-success" style="margin-top:12px;">
+                            <strong>Conexion exitosa</strong><br>
+                            Dispositivo: ${info.nombre_dispositivo || 'ZKTeco'}<br>
+                            Serial: ${info.serial_number || '-'} | MAC: ${info.mac || '-'}<br>
+                            Usuarios: ${info.usuarios_registrados || 0} / ${info.capacidad_usuarios || '-'}<br>
+                            Huellas: ${info.huellas_registradas || 0} / ${info.capacidad_huellas || '-'}<br>
+                            Registros: ${info.registros_asistencia || 0}
+                        </div>
+                    `;
+                    refrescarEstadoDispositivo();
+                } else {
+                    statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${data.detail || 'Error de conexion'}</div>`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${error.message}</div>`;
+            }
+        }
+
+        // ============ SINCRONIZAR USUARIOS ============
+        async function sincronizarUsuarios() {
+            const statusDiv = document.getElementById('syncStatus');
+            statusDiv.innerHTML = '<div style="margin-top:12px;color:var(--slate-500);font-size:0.85rem;"><span class="spinner"></span> Importando usuarios...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/api/zkteco/sincronizar-usuarios`, { method: 'POST' });
+                const data = await response.json();
+
                 if (response.ok) {
                     statusDiv.innerHTML = `
-                        <div class="alert alert-success">
-                            <strong>✅ Usuarios importados</strong><br>
-                            Total sincronizados: ${data.total_sincronizados}<br>
-                            Total en dispositivo: ${data.total_usuarios}
+                        <div class="alert alert-success" style="margin-top:12px;">
+                            <strong>Usuarios importados</strong><br>
+                            Nuevos: ${data.total_sincronizados} | Actualizados: ${data.total_actualizados || 0}<br>
+                            Total en dispositivo: ${data.total_en_dispositivo}
                         </div>
                     `;
                     cargarPersonal();
                     cargarEstadisticas();
                 } else {
-                    statusDiv.innerHTML = `<div class="alert alert-error">❌ ${data.detail || 'Error'}</div>`;
+                    statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${data.detail || 'Error'}</div>`;
                 }
             } catch (error) {
-                statusDiv.innerHTML = `<div class="alert alert-error">❌ ${error.message}</div>`;
+                statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${error.message}</div>`;
             }
         }
 
-        // SINCRONIZAR REGISTROS
-        async function sincronizarRegistros() {
-            const ip = document.getElementById('ipZkteco').value;
-            const puerto = parseInt(document.getElementById('puertoZkteco').value);
-            const statusDiv = document.getElementById('syncStatus');
-            statusDiv.innerHTML = '<div class="loading"></div> Importando registros de asistencia...';
-
+        // ============ VER ASISTENCIA ============
+        async function verAsistencia(personalId) {
             try {
-                const response = await fetch(`${API_URL}/api/zkteco/sincronizar-registros?ip=${ip}&puerto=${puerto}`, {
-                    method: 'POST'
-                });
+                if (dispositivoConectado) {
+                    mostrarAlerta('Sincronizando asistencia...', 'info');
+                    try {
+                        await fetch(`${API_URL}/api/zkteco/sincronizar-registros`, { method: 'POST' });
+                    } catch (syncErr) {
+                        console.warn('Sync error:', syncErr);
+                    }
+                }
+
+                const response = await fetch(`${API_URL}/api/personal/${personalId}/asistencia?limit=500`);
+                if (!response.ok) throw new Error('Error al cargar asistencia');
                 const data = await response.json();
-                
-                if (response.ok) {
-                    statusDiv.innerHTML = `
-                        <div class="alert alert-success">
-                            <strong>✅ Registros importados</strong><br>
-                            Total sincronizados: ${data.total_sincronizados}<br>
-                            Total en dispositivo: ${data.total_registros}
+
+                let bodyHtml = '';
+
+                if (data.registros.length === 0) {
+                    bodyHtml = `
+                        <div class="empty-state">
+                            <div class="empty-icon">&#128203;</div>
+                            <p>No hay registros de asistencia</p>
                         </div>
                     `;
                 } else {
-                    statusDiv.innerHTML = `<div class="alert alert-error">❌ ${data.detail || 'Error'}</div>`;
-                }
-            } catch (error) {
-                statusDiv.innerHTML = `<div class="alert alert-error">❌ ${error.message}</div>`;
-            }
-        }
-
-        // VER ASISTENCIA DEL PERSONAL
-        async function verAsistencia(personalId) {
-            try {
-                const response = await fetch(`${API_URL}/api/personal/${personalId}/asistencia`);
-                if (!response.ok) throw new Error('Error al cargar asistencia');
-                
-                const data = await response.json();
-                
-                let registrosHtml = '<strong>Últimos Registros de Asistencia</strong><br><br>';
-                
-                if (data.registros.length === 0) {
-                    registrosHtml += '<p>No hay registros de asistencia</p>';
-                } else {
-                    registrosHtml += '<table style="width:100%; border-collapse: collapse;"><tr style="background:#667eea; color:white;"><th style="padding:8px; text-align:left;">Fecha/Hora</th><th style="padding:8px; text-align:left;">Tipo</th></tr>';
-                    
+                    bodyHtml = '<table class="att-table"><thead><tr><th>Fecha</th><th>Hora</th><th>Tipo</th></tr></thead><tbody>';
                     data.registros.forEach(reg => {
                         const fecha = new Date(reg.fecha_hora);
-                        const fechaFormato = fecha.toLocaleString('es-ES');
-                        const tipoBadge = reg.tipo === 'entrada' ? '🔓 Entrada' : '🔐 Salida';
-                        registrosHtml += `<tr style="border-bottom:1px solid #ddd;"><td style="padding:8px;">${fechaFormato}</td><td style="padding:8px;">${tipoBadge}</td></tr>`;
+                        const fechaStr = fecha.toLocaleDateString('es-ES');
+                        const horaStr = fecha.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+                        const esEntrada = reg.tipo === 'entrada';
+                        const badge = esEntrada
+                            ? '<span class="badge-entrada">Entrada</span>'
+                            : '<span class="badge-salida">Salida</span>';
+                        bodyHtml += `<tr><td>${fechaStr}</td><td>${horaStr}</td><td>${badge}</td></tr>`;
                     });
-                    
-                    registrosHtml += '</table>';
+                    bodyHtml += '</tbody></table>';
                 }
-                
-                // Crear modal
+
                 const modal = document.createElement('div');
-                modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000;';
+                modal.className = 'modal-overlay';
+                modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
                 modal.innerHTML = `
-                    <div style="background:white;padding:30px;border-radius:10px;max-width:600px;max-height:80vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,0.2);">
-                        <h2>${data.nombre}</h2>
-                        <p style="color:#666;margin-bottom:20px;">Total de registros: ${data.total_registros}</p>
-                        ${registrosHtml}
-                        <button onclick="this.parentElement.parentElement.remove()" style="margin-top:20px;background:#6c757d;width:100%;">Cerrar</button>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>${data.nombre}</h2>
+                            <p>${data.total_registros} registros de asistencia</p>
+                        </div>
+                        <div class="modal-body">
+                            ${bodyHtml}
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-ghost" onclick="this.closest('.modal-overlay').remove()">Cerrar</button>
+                        </div>
                     </div>
                 `;
-                
+
                 document.body.appendChild(modal);
             } catch (error) {
-                mostrarAlerta('❌ ' + error.message, 'error');
+                mostrarAlerta(error.message, 'error');
             }
         }
     </script>

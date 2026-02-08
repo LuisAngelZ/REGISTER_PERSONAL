@@ -8,9 +8,10 @@ class Settings(BaseSettings):
     model_config = ConfigDict(env_file='.env')
     
     # ZKTeco Device
-    zkteco_ip: str = "192.168.1.100"
+    zkteco_ip: str = "192.168.100.200"
     zkteco_port: int = 4370
     zkteco_timeout: int = 5
+    zkteco_password: int = 0
     
     # Database
     database_url: str = "sqlite:///./registro_personal.db"
