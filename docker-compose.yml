@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: registro_personal
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secreto123
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d registro_personal"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://admin:secreto123@db:5432/registro_personal
+      ZKTECO_IP: 192.168.100.200
+      ZKTECO_PORT: 4370
+      ZKTECO_TIMEOUT: 15
+      ZKTECO_PASSWORD: 123456
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/device_config.json:/app/backend/device_config.json
+
+volumes:
+  pgdata:

@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+.env
+.vscode/
+.claude/
+nul
+device_config.json
+device_schedule.json
