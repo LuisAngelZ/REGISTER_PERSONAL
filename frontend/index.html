@@ -6,852 +6,7 @@
     <title>Sistema de Registro de Personal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --slate-900: #0f172a;
-            --slate-800: #1e293b;
-            --slate-700: #334155;
-            --slate-600: #475569;
-            --slate-500: #64748b;
-            --slate-400: #94a3b8;
-            --slate-300: #cbd5e1;
-            --slate-200: #e2e8f0;
-            --slate-100: #f1f5f9;
-            --slate-50: #f8fafc;
-            --white: #ffffff;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --success: #22c55e;
-            --success-bg: #f0fdf4;
-            --danger: #ef4444;
-            --danger-bg: #fef2f2;
-            --warning: #f59e0b;
-            --warning-bg: #fffbeb;
-            --info: #3b82f6;
-            --info-bg: #eff6ff;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--slate-100);
-            color: var(--slate-800);
-            min-height: 100vh;
-        }
-
-        /* ============ LOGIN SCREEN ============ */
-        .login-screen {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: var(--slate-900);
-            padding: 20px;
-        }
-
-        .login-card {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 48px 40px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .login-header .icon-circle {
-            width: 72px;
-            height: 72px;
-            background: var(--slate-100);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            font-size: 32px;
-        }
-
-        .login-header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--slate-900);
-            margin-bottom: 6px;
-        }
-
-        .login-header p {
-            color: var(--slate-500);
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--slate-600);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 11px 14px;
-            border: 1.5px solid var(--slate-200);
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-family: inherit;
-            color: var(--slate-800);
-            background: var(--slate-50);
-            transition: all 0.2s;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: var(--white);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-        }
-
-        select.form-input {
-            cursor: pointer;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
-        }
-
-        .btn-primary {
-            background: var(--slate-800);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background: var(--slate-700);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .btn-accent {
-            background: var(--accent);
-            color: var(--white);
-        }
-
-        .btn-accent:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--slate-500);
-            border: 1.5px solid var(--slate-200);
-        }
-
-        .btn-ghost:hover {
-            background: var(--slate-50);
-            color: var(--slate-700);
-        }
-
-        .btn-sm {
-            padding: 7px 14px;
-            font-size: 0.78rem;
-            border-radius: 8px;
-            width: auto;
-        }
-
-        .btn-success { background: var(--success); color: var(--white); }
-        .btn-success:hover { background: #16a34a; }
-        .btn-danger { background: var(--danger); color: var(--white); }
-        .btn-danger:hover { background: #dc2626; }
-        .btn-info { background: var(--slate-500); color: var(--white); }
-        .btn-info:hover { background: var(--slate-600); }
-
-        .login-status {
-            text-align: center;
-            margin-top: 16px;
-            font-size: 0.85rem;
-            min-height: 20px;
-        }
-
-        .login-status.conectando { color: var(--warning); }
-        .login-status.error { color: var(--danger); }
-        .login-status.success { color: var(--success); }
-
-        .login-divider {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 20px 0;
-            color: var(--slate-400);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .login-divider::before,
-        .login-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--slate-200);
-        }
-
-        /* ============ MAIN APP ============ */
-        .main-app {
-            display: none;
-            min-height: 100vh;
-        }
-
-        .main-app.visible {
-            display: block;
-        }
-
-        /* Navbar */
-        .navbar {
-            background: var(--slate-900);
-            color: var(--white);
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 60px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 1rem;
-        }
-
-        .navbar-brand span {
-            color: var(--slate-400);
-            font-weight: 400;
-            font-size: 0.85rem;
-        }
-
-        .device-pill {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 500;
-        }
-
-        .device-pill.online {
-            background: rgba(34, 197, 94, 0.15);
-            color: #4ade80;
-        }
-
-        .device-pill.offline {
-            background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
-        }
-
-        .device-pill.connecting {
-            background: rgba(245, 158, 11, 0.15);
-            color: #fbbf24;
-        }
-
-        .pill-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .pill-dot.green { background: #4ade80; }
-        .pill-dot.red { background: #f87171; }
-        .pill-dot.yellow { background: #fbbf24; }
-
-        /* Section Navigation */
-        .section-nav {
-            background: var(--white);
-            border-bottom: 1px solid var(--slate-200);
-            padding: 0 24px;
-            display: flex;
-            gap: 4px;
-            overflow-x: auto;
-        }
-
-        .nav-item {
-            padding: 14px 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--slate-500);
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-            white-space: nowrap;
-            background: none;
-            border-top: none;
-            border-left: none;
-            border-right: none;
-            font-family: inherit;
-            width: auto;
-            border-radius: 0;
-        }
-
-        .nav-item:hover {
-            color: var(--slate-800);
-            background: var(--slate-50);
-            transform: none;
-            box-shadow: none;
-        }
-
-        .nav-item.active {
-            color: var(--slate-900);
-            border-bottom-color: var(--slate-900);
-            font-weight: 600;
-        }
-
-        /* Content */
-        .content {
-            padding: 24px;
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .stat-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--slate-200);
-        }
-
-        .stat-card .stat-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--slate-500);
-            margin-bottom: 6px;
-        }
-
-        .stat-card .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--slate-900);
-        }
-
-        /* Cards */
-        .card {
-            background: var(--white);
-            border-radius: 12px;
-            border: 1px solid var(--slate-200);
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 18px 24px;
-            border-bottom: 1px solid var(--slate-100);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .card-header h3 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--slate-800);
-        }
-
-        .card-body {
-            padding: 24px;
-        }
-
-        /* Personnel Grid */
-        .personnel-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
-        }
-
-        .person-card {
-            background: var(--white);
-            border: 1px solid var(--slate-200);
-            border-radius: 12px;
-            padding: 20px;
-            transition: all 0.2s;
-        }
-
-        .person-card:hover {
-            border-color: var(--slate-300);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-        }
-
-        .person-top {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 14px;
-        }
-
-        .person-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            background: var(--slate-100);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--slate-600);
-        }
-
-        .person-status {
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .person-status.active {
-            background: var(--success-bg);
-            color: #16a34a;
-        }
-
-        .person-status.inactive {
-            background: var(--danger-bg);
-            color: #dc2626;
-        }
-
-        .person-name {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--slate-900);
-            margin-bottom: 4px;
-        }
-
-        .person-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-bottom: 14px;
-        }
-
-        .person-meta span {
-            font-size: 0.8rem;
-            color: var(--slate-500);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .person-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 16px;
-        }
-
-        .tag {
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 0.72rem;
-            font-weight: 500;
-            background: var(--slate-100);
-            color: var(--slate-600);
-        }
-
-        .tag.uid {
-            background: var(--info-bg);
-            color: var(--info);
-        }
-
-        .person-actions {
-            display: flex;
-            gap: 8px;
-            padding-top: 14px;
-            border-top: 1px solid var(--slate-100);
-        }
-
-        .person-actions .btn-sm {
-            flex: 1;
-        }
-
-        /* Search */
-        .search-bar {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 12px 16px 12px 42px;
-            border: 1.5px solid var(--slate-200);
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-family: inherit;
-            background: var(--white);
-            color: var(--slate-800);
-            transition: all 0.2s;
-        }
-
-        .search-bar input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .search-bar::before {
-            content: '\1F50D';
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1rem;
-        }
-
-        /* Alerts */
-        .alert-container {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-width: 380px;
-        }
-
-        .alert {
-            padding: 14px 18px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            animation: slideRight 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        @keyframes slideRight {
-            from { opacity: 0; transform: translateX(40px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .alert-success {
-            background: var(--success-bg);
-            color: #166534;
-            border-left: 3px solid var(--success);
-        }
-
-        .alert-error {
-            background: var(--danger-bg);
-            color: #991b1b;
-            border-left: 3px solid var(--danger);
-        }
-
-        .alert-info {
-            background: var(--info-bg);
-            color: #1e40af;
-            border-left: 3px solid var(--info);
-        }
-
-        /* Forms Layout */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .form-grid .form-group.full {
-            grid-column: 1 / -1;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 8px;
-        }
-
-        /* Connection section */
-        .config-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .connection-status {
-            margin-top: 16px;
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: var(--white);
-            border-radius: 16px;
-            max-width: 650px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--slate-100);
-        }
-
-        .modal-header h2 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--slate-900);
-        }
-
-        .modal-header p {
-            font-size: 0.8rem;
-            color: var(--slate-500);
-            margin-top: 4px;
-        }
-
-        .modal-body {
-            padding: 24px;
-        }
-
-        .modal-footer {
-            padding: 16px 24px;
-            border-top: 1px solid var(--slate-100);
-        }
-
-        /* Attendance Table */
-        .att-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .att-table th {
-            text-align: left;
-            font-size: 0.72rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--slate-500);
-            padding: 10px 12px;
-            background: var(--slate-50);
-            border-bottom: 1px solid var(--slate-200);
-        }
-
-        .att-table td {
-            padding: 10px 12px;
-            font-size: 0.85rem;
-            border-bottom: 1px solid var(--slate-100);
-            color: var(--slate-700);
-        }
-
-        .badge-entrada {
-            background: var(--success-bg);
-            color: #16a34a;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .badge-salida {
-            background: var(--danger-bg);
-            color: #dc2626;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        /* Loading spinner */
-        .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2.5px solid var(--slate-200);
-            border-top-color: var(--slate-600);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 48px 24px;
-            color: var(--slate-400);
-        }
-
-        .empty-state .empty-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-            opacity: 0.5;
-        }
-
-        .empty-state p {
-            font-size: 0.9rem;
-        }
-
-        /* ============ RESPONSIVE ============ */
-        @media (max-width: 1024px) {
-            .config-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .personnel-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .navbar {
-                padding: 0 16px;
-            }
-
-            .navbar-brand span {
-                display: none;
-            }
-
-            .device-pill span.pill-text {
-                display: none;
-            }
-
-            .section-nav {
-                padding: 0 12px;
-            }
-
-            .nav-item {
-                padding: 12px 14px;
-                font-size: 0.8rem;
-            }
-
-            .content {
-                padding: 16px;
-            }
-
-            .login-card {
-                padding: 32px 24px;
-            }
-
-            .alert-container {
-                right: 12px;
-                left: 12px;
-                max-width: none;
-            }
-
-            .person-actions {
-                flex-wrap: wrap;
-            }
-
-            .config-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .navbar {
-                height: 52px;
-            }
-
-            .navbar-brand {
-                font-size: 0.85rem;
-            }
-
-            .section-nav {
-                gap: 0;
-            }
-
-            .nav-item {
-                padding: 10px 12px;
-                font-size: 0.75rem;
-            }
-
-            .person-card {
-                padding: 16px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
 
@@ -906,7 +61,9 @@
             <button class="nav-item active" onclick="switchSection('personal', this)">Personal</button>
             <button class="nav-item" onclick="switchSection('registrar', this)">Registrar</button>
             <button class="nav-item" onclick="switchSection('editar-section', this)">Editar</button>
+            <button class="nav-item" onclick="switchSection('reporte', this); cargarReporteInit();">Reporte</button>
             <button class="nav-item" onclick="switchSection('configuracion', this)">Configuracion</button>
+            <button class="nav-item" onclick="switchSection('rol-libres', this); generarRolLibres();">Rol de Libres</button>
         </div>
 
         <!-- Alert container -->
@@ -988,14 +145,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Dia Libre</label>
-                                    <select class="form-input" id="diaLibre">
-                                        <option value="lunes">Lunes</option>
-                                        <option value="martes">Martes</option>
-                                        <option value="miercoles">Miercoles</option>
-                                        <option value="jueves">Jueves</option>
-                                        <option value="viernes">Viernes</option>
-                                        <option value="sabado">Sabado</option>
-                                        <option value="domingo" selected>Domingo</option>
+                                    <select class="form-input" id="diaLibre" disabled style="background:var(--slate-100);color:var(--slate-500);">
+                                        <option value="domingo" selected>Se asigna en Rol de Libres</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -1081,15 +232,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Dia Libre</label>
-                                    <select class="form-input" id="editDiaLibre">
-                                        <option value="lunes">Lunes</option>
-                                        <option value="martes">Martes</option>
-                                        <option value="miercoles">Miercoles</option>
-                                        <option value="jueves">Jueves</option>
-                                        <option value="viernes">Viernes</option>
-                                        <option value="sabado">Sabado</option>
-                                        <option value="domingo">Domingo</option>
-                                    </select>
+                                    <input type="text" class="form-input" id="editDiaLibre" readonly style="background:var(--slate-100);color:var(--slate-500);" value="Se asigna en Rol de Libres">
                                 </div>
                                 <div class="form-group">
                                     <label>Hora Entrada</label>
@@ -1121,6 +264,164 @@
                                 <button type="button" class="btn btn-ghost" onclick="cancelarEdicion()">Cancelar</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== SECTION: Rol de Libres ====== -->
+            <div id="rol-libres" class="section">
+                <div class="card">
+                    <div class="card-header" style="flex-wrap:wrap;gap:10px;">
+                        <h3>Rol de Dias Libres</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <select class="form-input" id="rolMes" style="width:auto;" onchange="generarRolLibres()">
+                                <option value="0">Enero</option>
+                                <option value="1">Febrero</option>
+                                <option value="2">Marzo</option>
+                                <option value="3">Abril</option>
+                                <option value="4">Mayo</option>
+                                <option value="5">Junio</option>
+                                <option value="6">Julio</option>
+                                <option value="7">Agosto</option>
+                                <option value="8">Septiembre</option>
+                                <option value="9">Octubre</option>
+                                <option value="10">Noviembre</option>
+                                <option value="11">Diciembre</option>
+                            </select>
+                            <input type="number" class="form-input" id="rolAnio" style="width:90px;" value="2026" onchange="generarRolLibres()">
+                            <button class="btn btn-sm btn-primary" onclick="descargarRolPDF()" style="white-space:nowrap;">Guardar e Imprimir</button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="overflow-x:auto;">
+                        <div class="rol-layout">
+                            <!-- Left sidebar: draggable personnel -->
+                            <div class="rol-sidebar">
+                                <div class="rol-sidebar-header">Personal</div>
+                                <div class="rol-sidebar-list" id="rolSidebarList">
+                                    <p style="padding:12px;color:var(--slate-400);font-size:0.8rem;">Cargando...</p>
+                                </div>
+                            </div>
+                            <!-- Right: calendar -->
+                            <div class="rol-calendar-area" id="rolCalendarContainer">
+                                <div class="empty-state"><p>Selecciona mes y ano para generar el rol</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== SECTION: Reporte ====== -->
+            <div id="reporte" class="section">
+                <div class="card">
+                    <div class="card-header" style="flex-wrap:wrap;gap:10px;">
+                        <h3>Reporte de Asistencia</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Controls row -->
+                        <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:20px;">
+                            <div class="form-group" style="margin-bottom:0;flex:1;min-width:200px;">
+                                <label>Seleccionar Personal</label>
+                                <select class="form-input" id="reportePersonal" onchange="cargarReporte()">
+                                    <option value="">-- Seleccionar --</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Mes</label>
+                                <select class="form-input" id="reporteMes" onchange="cargarReporte()">
+                                    <option value="0">Enero</option>
+                                    <option value="1">Febrero</option>
+                                    <option value="2">Marzo</option>
+                                    <option value="3">Abril</option>
+                                    <option value="4">Mayo</option>
+                                    <option value="5">Junio</option>
+                                    <option value="6">Julio</option>
+                                    <option value="7">Agosto</option>
+                                    <option value="8">Septiembre</option>
+                                    <option value="9">Octubre</option>
+                                    <option value="10">Noviembre</option>
+                                    <option value="11">Diciembre</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Ano</label>
+                                <input type="number" class="form-input" id="reporteAnio" value="2026" style="width:90px;" onchange="cargarReporte()">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Sueldo (Bs)</label>
+                                <input type="number" class="form-input" id="reporteSueldo" value="2362" step="0.01" style="width:120px;" onchange="recalcularSalario()">
+                            </div>
+                        </div>
+
+                        <!-- Layout: left summary + right table -->
+                        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+                            <!-- Left: Summary -->
+                            <div style="min-width:220px;max-width:260px;" id="reporteResumen">
+                                <div class="reporte-summary">
+                                    <div class="summary-item">
+                                        <span class="summary-label">Dias Trabajados</span>
+                                        <span class="summary-value" id="repDiasTrab">0</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">Dias Descanso</span>
+                                        <span class="summary-value" id="repDiasDescanso">0</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">Dias Falta</span>
+                                        <span class="summary-value" id="repDiasFalta" style="color:var(--danger);">0</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">Total Dias</span>
+                                        <span class="summary-value" id="repTotalDias">0</span>
+                                    </div>
+                                    <hr style="border:none;border-top:1px solid var(--slate-200);margin:8px 0;">
+                                    <div class="summary-item">
+                                        <span class="summary-label">Min. Retraso</span>
+                                        <span class="summary-value" id="repMinRetraso" style="color:var(--danger);">0</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">Min. Extra</span>
+                                        <span class="summary-value" id="repMinExtra" style="color:var(--success);">0</span>
+                                    </div>
+                                    <hr style="border:none;border-top:1px solid var(--slate-200);margin:8px 0;">
+                                    <div class="summary-item">
+                                        <span class="summary-label">Sueldo Base</span>
+                                        <span class="summary-value" id="repSueldo">0 Bs</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">Desc. Retraso</span>
+                                        <span class="summary-value" id="repDescRetraso" style="color:var(--danger);">0 Bs</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">Pago Extra</span>
+                                        <span class="summary-value" id="repPagoExtra" style="color:var(--success);">0 Bs</span>
+                                    </div>
+                                    <div class="summary-item" style="font-weight:700;font-size:1rem;margin-top:6px;padding-top:8px;border-top:2px solid var(--slate-300);">
+                                        <span class="summary-label">Total a Pagar</span>
+                                        <span class="summary-value" id="repTotal" style="color:var(--accent);">0 Bs</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Data table -->
+                            <div style="flex:1;overflow-x:auto;">
+                                <table class="reporte-table" id="reporteTabla">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Dia</th>
+                                            <th>Hora Ingreso</th>
+                                            <th>Hora Salida</th>
+                                            <th>Min. Retraso</th>
+                                            <th>Min. Extra</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reporteBody">
+                                        <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--slate-400);">Selecciona un personal para ver el reporte</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1166,663 +467,13 @@
                             <div id="syncStatus" class="connection-status"></div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
         </div>
     </div>
 
-    <script>
-        const API_URL = "http://localhost:8000";
-        let personalActual = null;
-        let dispositivoConectado = false;
-        let infoDispositivo = null;
-
-        // ============ INIT ============
-        window.addEventListener('load', async () => {
-            await cargarConfigEnLogin();
-        });
-
-        async function cargarConfigEnLogin() {
-            try {
-                const response = await fetch(`${API_URL}/api/zkteco/config`);
-                if (response.ok) {
-                    const config = await response.json();
-                    document.getElementById('loginIp').value = config.ip || '';
-                    document.getElementById('loginPuerto').value = config.puerto || 4370;
-                    document.getElementById('loginPassword').value = config.password || 0;
-                    if (config.guardado && config.ip) {
-                        intentarConexion();
-                    }
-                }
-            } catch (error) {
-                console.error('Error cargando config:', error);
-            }
-        }
-
-        // ============ LOGIN ============
-        async function intentarConexion() {
-            const ip = document.getElementById('loginIp').value.trim();
-            const puerto = parseInt(document.getElementById('loginPuerto').value) || 4370;
-            const password = parseInt(document.getElementById('loginPassword').value) || 0;
-            const statusDiv = document.getElementById('loginStatus');
-            const btn = document.getElementById('btnConectar');
-
-            if (!ip) {
-                statusDiv.className = 'login-status error';
-                statusDiv.textContent = 'Ingresa la IP del dispositivo';
-                return;
-            }
-
-            btn.disabled = true;
-            btn.textContent = 'Conectando...';
-            statusDiv.className = 'login-status conectando';
-            statusDiv.innerHTML = '<span class="spinner"></span> Conectando al dispositivo...';
-
-            try {
-                await fetch(`${API_URL}/api/zkteco/configurar-ip`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ip, puerto, password })
-                });
-
-                const response = await fetch(`${API_URL}/api/zkteco/test-conexion`);
-                const data = await response.json();
-
-                if (response.ok) {
-                    dispositivoConectado = true;
-                    infoDispositivo = data.info;
-                    statusDiv.className = 'login-status success';
-                    statusDiv.textContent = 'Conexion exitosa!';
-                    setTimeout(() => entrarAlSistema(), 600);
-                } else {
-                    statusDiv.className = 'login-status error';
-                    statusDiv.textContent = (data.detail || 'Verifica la IP y que el dispositivo este encendido');
-                    btn.disabled = false;
-                    btn.textContent = 'Conectar';
-                }
-            } catch (error) {
-                statusDiv.className = 'login-status error';
-                statusDiv.textContent = 'Error: Verifica que el servidor backend este corriendo';
-                btn.disabled = false;
-                btn.textContent = 'Conectar';
-            }
-        }
-
-        function entrarAlSistema() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainApp').classList.add('visible');
-            cargarConfigGuardada();
-            cargarPersonal();
-            cargarEstadisticas();
-            actualizarDevicePill();
-        }
-
-        function entrarSinDispositivo() {
-            dispositivoConectado = false;
-            infoDispositivo = null;
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainApp').classList.add('visible');
-            actualizarDevicePill();
-            cargarConfigGuardada();
-            cargarPersonal();
-            cargarEstadisticas();
-        }
-
-        // ============ DEVICE PILL ============
-        function actualizarDevicePill() {
-            const pill = document.getElementById('devicePill');
-            const text = document.getElementById('devicePillText');
-            const dot = pill.querySelector('.pill-dot');
-
-            if (dispositivoConectado && infoDispositivo) {
-                pill.className = 'device-pill online';
-                dot.className = 'pill-dot green';
-                text.textContent = `${infoDispositivo.nombre_dispositivo || 'ZKTeco'} | ${infoDispositivo.usuarios_registrados || 0} usuarios`;
-            } else {
-                pill.className = 'device-pill offline';
-                dot.className = 'pill-dot red';
-                text.textContent = 'Sin dispositivo';
-            }
-        }
-
-        async function refrescarEstadoDispositivo() {
-            try {
-                const response = await fetch(`${API_URL}/api/zkteco/test-conexion`);
-                const data = await response.json();
-                if (response.ok) {
-                    dispositivoConectado = true;
-                    infoDispositivo = data.info;
-                } else {
-                    dispositivoConectado = false;
-                    infoDispositivo = null;
-                }
-            } catch {
-                dispositivoConectado = false;
-                infoDispositivo = null;
-            }
-            actualizarDevicePill();
-        }
-
-        // ============ CONFIG ============
-        async function cargarConfigGuardada() {
-            try {
-                const response = await fetch(`${API_URL}/api/zkteco/config`);
-                if (response.ok) {
-                    const config = await response.json();
-                    document.getElementById('ipZkteco').value = config.ip || '';
-                    document.getElementById('puertoZkteco').value = config.puerto || 4370;
-                    document.getElementById('passwordZkteco').value = config.password || 0;
-                    if (config.guardado) {
-                        document.getElementById('configInfo').innerHTML =
-                            `<strong>Dispositivo configurado</strong> &mdash; ${config.ip}:${config.puerto}`;
-                    }
-                }
-            } catch (error) {
-                console.error('Error cargando config:', error);
-            }
-        }
-
-        // ============ CALCULAR FECHA FIN ============
-        const DURACION_DIAS = {
-            '3_meses': 85,
-            '6_meses': 180,
-            '1_anio': 365,
-        };
-
-        function calcularFechaFin(inputInicioId, selectDuracionId, inputFinId) {
-            const inicio = document.getElementById(inputInicioId).value;
-            const duracion = document.getElementById(selectDuracionId).value;
-            if (!inicio || !duracion) {
-                document.getElementById(inputFinId).value = '';
-                return;
-            }
-            const dias = DURACION_DIAS[duracion] || 85;
-            const fechaInicio = new Date(inicio + 'T00:00:00');
-            fechaInicio.setDate(fechaInicio.getDate() + dias);
-            const y = fechaInicio.getFullYear();
-            const m = String(fechaInicio.getMonth() + 1).padStart(2, '0');
-            const d = String(fechaInicio.getDate()).padStart(2, '0');
-            document.getElementById(inputFinId).value = `${y}-${m}-${d}`;
-        }
-
-        // Auto-calc on date change
-        document.addEventListener('change', (e) => {
-            if (e.target.id === 'fechaInicio' || e.target.id === 'duracionContrato') {
-                calcularFechaFin('fechaInicio', 'duracionContrato', 'fechaFin');
-            }
-            if (e.target.id === 'editFechaInicio' || e.target.id === 'editDuracionContrato') {
-                calcularFechaFin('editFechaInicio', 'editDuracionContrato', 'editFechaFin');
-            }
-        });
-
-        const PUESTOS_LABEL = {
-            'cajero': 'Cajero', 'mesero': 'Mesero', 'cocinero': 'Cocinero',
-            'lavaplatos': 'Lavaplatos', 'servidora': 'Servidora', 'guardia': 'Guardia',
-            'despacho': 'Despacho', 'otros': 'Otros'
-        };
-
-        const DIAS_LABEL = {
-            'lunes': 'Lunes', 'martes': 'Martes', 'miercoles': 'Miercoles',
-            'jueves': 'Jueves', 'viernes': 'Viernes', 'sabado': 'Sabado', 'domingo': 'Domingo'
-        };
-
-        // ============ TURNOS ============
-        const TURNOS_HORARIOS = {
-            'mañana':   { entrada: '08:00', salida: '17:00' },
-            'tarde':    { entrada: '13:00', salida: '22:00' },
-            'especial': { entrada: '12:00', salida: '21:00' },
-        };
-
-        function cambiarTurno(turno, inputEntradaId, inputSalidaId) {
-            const horarios = TURNOS_HORARIOS[turno];
-            if (horarios) {
-                document.getElementById(inputEntradaId).value = horarios.entrada;
-                document.getElementById(inputSalidaId).value = horarios.salida;
-            }
-        }
-
-        // ============ ALERTS ============
-        function mostrarAlerta(mensaje, tipo = 'info') {
-            const container = document.getElementById('alerts');
-            const alerta = document.createElement('div');
-            alerta.className = `alert alert-${tipo}`;
-            alerta.textContent = mensaje;
-            container.appendChild(alerta);
-            setTimeout(() => alerta.remove(), 4000);
-        }
-
-        // ============ NAVIGATION ============
-        function switchSection(sectionId, btn) {
-            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            btn.classList.add('active');
-        }
-
-        // ============ CREAR PERSONAL ============
-        async function crearPersonal(event) {
-            event.preventDefault();
-
-            const datos = {
-                nombre: document.getElementById('nombre').value,
-                apellido: document.getElementById('apellido').value,
-                documento: document.getElementById('documento').value,
-                puesto: document.getElementById('puesto').value,
-                turno: document.getElementById('turno').value,
-                hora_entrada: document.getElementById('horaEntrada').value,
-                hora_salida: document.getElementById('horaSalida').value,
-                fecha_inicio: document.getElementById('fechaInicio').value || null,
-                duracion_contrato: document.getElementById('duracionContrato').value,
-                dia_libre: document.getElementById('diaLibre').value,
-            };
-
-            try {
-                const response = await fetch(`${API_URL}/api/personal/`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datos)
-                });
-
-                if (!response.ok) throw new Error('Error al crear personal');
-
-                const nuevoPersonal = await response.json();
-                mostrarAlerta('Personal creado exitosamente', 'success');
-                document.getElementById('formCrear').reset();
-                cargarPersonal();
-                cargarEstadisticas();
-
-                if (dispositivoConectado && nuevoPersonal.id) {
-                    try {
-                        const expRes = await fetch(`${API_URL}/api/zkteco/exportar-usuario`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ personal_id: nuevoPersonal.id })
-                        });
-                        const expData = await expRes.json();
-                        if (expRes.ok) {
-                            mostrarAlerta(`Exportado al dispositivo: ${expData.nombre} (UID: ${expData.uid})`, 'success');
-                            cargarPersonal();
-                        } else {
-                            mostrarAlerta('Creado en BD pero no se pudo exportar al dispositivo', 'error');
-                        }
-                    } catch (expErr) {
-                        mostrarAlerta('Creado en BD pero fallo la exportacion', 'error');
-                    }
-                }
-            } catch (error) {
-                mostrarAlerta('Error: ' + error.message, 'error');
-            }
-        }
-
-        // ============ BUSCAR PERSONAL ============
-        async function buscarPersonal() {
-            const id = document.getElementById('buscarId').value;
-            if (!id) {
-                mostrarAlerta('Ingresa un ID', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_URL}/api/personal/${id}`);
-                if (!response.ok) throw new Error('Personal no encontrado');
-
-                const personal = await response.json();
-                personalActual = personal;
-
-                document.getElementById('editNombre').value = personal.nombre;
-                document.getElementById('editApellido').value = personal.apellido;
-                document.getElementById('editPuesto').value = personal.puesto || 'otros';
-                document.getElementById('editTurno').value = personal.turno || 'mañana';
-                document.getElementById('editDiaLibre').value = personal.dia_libre || 'domingo';
-                document.getElementById('editHoraEntrada').value = personal.hora_entrada || '08:00';
-                document.getElementById('editHoraSalida').value = personal.hora_salida || '17:00';
-                document.getElementById('editFechaInicio').value = personal.fecha_inicio || '';
-                document.getElementById('editDuracionContrato').value = personal.duracion_contrato || '3_meses';
-                document.getElementById('editFechaFin').value = personal.fecha_fin || '';
-                if (personal.fecha_inicio) {
-                    calcularFechaFin('editFechaInicio', 'editDuracionContrato', 'editFechaFin');
-                }
-
-                document.getElementById('formEditar').style.display = 'block';
-                mostrarAlerta('Personal encontrado: ' + personal.nombre + ' ' + personal.apellido, 'success');
-            } catch (error) {
-                mostrarAlerta(error.message, 'error');
-            }
-        }
-
-        // ============ ACTUALIZAR PERSONAL ============
-        async function actualizarPersonal(event) {
-            event.preventDefault();
-            if (!personalActual) return;
-
-            const datos = {
-                nombre: document.getElementById('editNombre').value,
-                apellido: document.getElementById('editApellido').value,
-                puesto: document.getElementById('editPuesto').value,
-                turno: document.getElementById('editTurno').value,
-                dia_libre: document.getElementById('editDiaLibre').value,
-                hora_entrada: document.getElementById('editHoraEntrada').value,
-                hora_salida: document.getElementById('editHoraSalida').value,
-                fecha_inicio: document.getElementById('editFechaInicio').value || null,
-                duracion_contrato: document.getElementById('editDuracionContrato').value,
-            };
-
-            try {
-                const response = await fetch(`${API_URL}/api/personal/${personalActual.id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datos)
-                });
-
-                if (!response.ok) throw new Error('Error al actualizar');
-                mostrarAlerta('Personal actualizado', 'success');
-
-                if (dispositivoConectado && personalActual.id) {
-                    try {
-                        const expRes = await fetch(`${API_URL}/api/zkteco/exportar-usuario`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ personal_id: personalActual.id })
-                        });
-                        const expData = await expRes.json();
-                        if (expRes.ok) {
-                            mostrarAlerta(`Actualizado en dispositivo: ${expData.nombre}`, 'success');
-                        } else {
-                            mostrarAlerta('Actualizado en BD pero fallo exportar al dispositivo', 'error');
-                        }
-                    } catch (expErr) {
-                        mostrarAlerta('Actualizado en BD pero fallo la exportacion', 'error');
-                    }
-                }
-
-                cancelarEdicion();
-                cargarPersonal();
-            } catch (error) {
-                mostrarAlerta('Error: ' + error.message, 'error');
-            }
-        }
-
-        function cancelarEdicion() {
-            document.getElementById('formEditar').style.display = 'none';
-            document.getElementById('buscarId').value = '';
-            personalActual = null;
-        }
-
-        // ============ CARGAR PERSONAL (CARDS) ============
-        async function cargarPersonal() {
-            try {
-                const response = await fetch(`${API_URL}/api/personal/`);
-                if (!response.ok) throw new Error('Error al cargar personal');
-
-                const personal = await response.json();
-                const container = document.getElementById('personnelContainer');
-
-                if (personal.length === 0) {
-                    container.innerHTML = `
-                        <div class="empty-state" style="grid-column:1/-1;">
-                            <div class="empty-icon">&#128100;</div>
-                            <p>No hay personal registrado</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                // Filter by CI or full name
-                const filtro = (document.getElementById('filtroNombre').value || '').toLowerCase();
-                const filtered = filtro
-                    ? personal.filter(p =>
-                        `${p.nombre} ${p.apellido}`.toLowerCase().includes(filtro) ||
-                        (p.documento || '').toLowerCase().includes(filtro)
-                    )
-                    : personal;
-
-                if (filtered.length === 0) {
-                    container.innerHTML = `
-                        <div class="empty-state" style="grid-column:1/-1;">
-                            <div class="empty-icon">&#128269;</div>
-                            <p>No se encontraron resultados</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const DURACION_LABEL = {'3_meses':'3 Meses','6_meses':'6 Meses','1_anio':'1 Ano'};
-
-                container.innerHTML = filtered.map(p => {
-                    const initials = (p.nombre[0] || '') + (p.apellido[0] || '');
-                    const statusClass = p.activo ? 'active' : 'inactive';
-                    const statusText = p.activo ? 'Activo' : 'Inactivo';
-                    const turnoLabel = {'mañana':'Manana','tarde':'Tarde','especial':'Especial'}[p.turno] || p.turno || '-';
-                    const puestoLabel = PUESTOS_LABEL[p.puesto] || p.puesto || '-';
-                    const diaLibreLabel = DIAS_LABEL[p.dia_libre] || p.dia_libre || '-';
-                    const duracionLabel = DURACION_LABEL[p.duracion_contrato] || '-';
-                    const fechaFinStr = p.fecha_fin ? new Date(p.fecha_fin + 'T00:00:00').toLocaleDateString('es-ES') : '-';
-                    const fechaInicioStr = p.fecha_inicio ? new Date(p.fecha_inicio + 'T00:00:00').toLocaleDateString('es-ES') : '-';
-
-                    return `
-                        <div class="person-card">
-                            <div class="person-top">
-                                <div class="person-avatar">${initials.toUpperCase()}</div>
-                                <span class="person-status ${statusClass}">${statusText}</span>
-                            </div>
-                            <div class="person-name">${p.nombre} ${p.apellido}</div>
-                            <div class="person-meta">
-                                <span>&#128179; CI: ${p.documento}</span>
-                                <span>&#128188; ${puestoLabel}</span>
-                                <span>&#128197; ${fechaInicioStr} - ${fechaFinStr}</span>
-                                <span>&#127774; Libre: ${diaLibreLabel}</span>
-                            </div>
-                            <div class="person-tags">
-                                <span class="tag">${turnoLabel}</span>
-                                <span class="tag">${duracionLabel}</span>
-                                ${p.user_id ? `<span class="tag uid">ID: ${p.user_id}</span>` : ''}
-                            </div>
-                            <div class="person-actions">
-                                <button class="btn btn-sm btn-success" onclick="editarPersonal(${p.id})">Editar</button>
-                                <button class="btn btn-sm btn-info" onclick="verAsistencia(${p.id})">Asistencia</button>
-                                <button class="btn btn-sm btn-danger" onclick="eliminarPersonal(${p.id})">Eliminar</button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-            } catch (error) {
-                mostrarAlerta(error.message, 'error');
-            }
-        }
-
-        function editarPersonal(id) {
-            document.getElementById('buscarId').value = id;
-            buscarPersonal();
-            // Switch to editar section
-            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById('editar-section').classList.add('active');
-            document.querySelectorAll('.nav-item')[2].classList.add('active');
-        }
-
-        // ============ ELIMINAR ============
-        async function eliminarPersonal(id) {
-            if (!confirm('Desactivar este personal?')) return;
-
-            try {
-                const response = await fetch(`${API_URL}/api/personal/${id}`, { method: 'DELETE' });
-                if (!response.ok) throw new Error('Error al eliminar');
-                mostrarAlerta('Personal desactivado', 'success');
-                cargarPersonal();
-                cargarEstadisticas();
-            } catch (error) {
-                mostrarAlerta(error.message, 'error');
-            }
-        }
-
-        // ============ ESTADISTICAS ============
-        async function cargarEstadisticas() {
-            try {
-                const response = await fetch(`${API_URL}/api/personal/stats/total`);
-                if (!response.ok) throw new Error('Error');
-                const stats = await response.json();
-                document.getElementById('totalPersonal').textContent = stats.total;
-                document.getElementById('activosPersonal').textContent = stats.activos;
-                document.getElementById('inactivosPersonal').textContent = stats.inactivos;
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        // ============ CONFIGURAR IP ============
-        async function configurarIP() {
-            const ip = document.getElementById('ipZkteco').value;
-            const puerto = parseInt(document.getElementById('puertoZkteco').value);
-            const password = parseInt(document.getElementById('passwordZkteco').value) || 0;
-            const statusDiv = document.getElementById('conexionStatus');
-
-            if (!ip) {
-                statusDiv.innerHTML = '<div class="alert alert-error" style="margin-top:12px;">Ingresa la IP del dispositivo</div>';
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_URL}/api/zkteco/configurar-ip`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ip, puerto, password })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    statusDiv.innerHTML = `<div class="alert alert-success" style="margin-top:12px;">Configuracion guardada: ${ip}:${puerto}</div>`;
-                    document.getElementById('configInfo').innerHTML =
-                        `<strong>Dispositivo configurado</strong> &mdash; ${ip}:${puerto}`;
-                } else {
-                    statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${data.detail || 'Error'}</div>`;
-                }
-            } catch (error) {
-                statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${error.message}</div>`;
-            }
-        }
-
-        // ============ TEST CONEXION ============
-        async function testConexion() {
-            await configurarIP();
-            const statusDiv = document.getElementById('conexionStatus');
-            statusDiv.innerHTML = '<div style="margin-top:12px;color:var(--slate-500);font-size:0.85rem;"><span class="spinner"></span> Probando conexion...</div>';
-
-            try {
-                const response = await fetch(`${API_URL}/api/zkteco/test-conexion`);
-                const data = await response.json();
-
-                if (response.ok) {
-                    const info = data.info;
-                    statusDiv.innerHTML = `
-                        <div class="alert alert-success" style="margin-top:12px;">
-                            <strong>Conexion exitosa</strong><br>
-                            Dispositivo: ${info.nombre_dispositivo || 'ZKTeco'}<br>
-                            Serial: ${info.serial_number || '-'} | MAC: ${info.mac || '-'}<br>
-                            Usuarios: ${info.usuarios_registrados || 0} / ${info.capacidad_usuarios || '-'}<br>
-                            Huellas: ${info.huellas_registradas || 0} / ${info.capacidad_huellas || '-'}<br>
-                            Registros: ${info.registros_asistencia || 0}
-                        </div>
-                    `;
-                    refrescarEstadoDispositivo();
-                } else {
-                    statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${data.detail || 'Error de conexion'}</div>`;
-                }
-            } catch (error) {
-                statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${error.message}</div>`;
-            }
-        }
-
-        // ============ SINCRONIZAR USUARIOS ============
-        async function sincronizarUsuarios() {
-            const statusDiv = document.getElementById('syncStatus');
-            statusDiv.innerHTML = '<div style="margin-top:12px;color:var(--slate-500);font-size:0.85rem;"><span class="spinner"></span> Importando usuarios...</div>';
-
-            try {
-                const response = await fetch(`${API_URL}/api/zkteco/sincronizar-usuarios`, { method: 'POST' });
-                const data = await response.json();
-
-                if (response.ok) {
-                    statusDiv.innerHTML = `
-                        <div class="alert alert-success" style="margin-top:12px;">
-                            <strong>Usuarios importados</strong><br>
-                            Nuevos: ${data.total_sincronizados} | Actualizados: ${data.total_actualizados || 0}<br>
-                            Total en dispositivo: ${data.total_en_dispositivo}
-                        </div>
-                    `;
-                    cargarPersonal();
-                    cargarEstadisticas();
-                } else {
-                    statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${data.detail || 'Error'}</div>`;
-                }
-            } catch (error) {
-                statusDiv.innerHTML = `<div class="alert alert-error" style="margin-top:12px;">${error.message}</div>`;
-            }
-        }
-
-        // ============ VER ASISTENCIA ============
-        async function verAsistencia(personalId) {
-            try {
-                if (dispositivoConectado) {
-                    mostrarAlerta('Sincronizando asistencia...', 'info');
-                    try {
-                        await fetch(`${API_URL}/api/zkteco/sincronizar-registros`, { method: 'POST' });
-                    } catch (syncErr) {
-                        console.warn('Sync error:', syncErr);
-                    }
-                }
-
-                const response = await fetch(`${API_URL}/api/personal/${personalId}/asistencia?limit=500`);
-                if (!response.ok) throw new Error('Error al cargar asistencia');
-                const data = await response.json();
-
-                let bodyHtml = '';
-
-                if (data.registros.length === 0) {
-                    bodyHtml = `
-                        <div class="empty-state">
-                            <div class="empty-icon">&#128203;</div>
-                            <p>No hay registros de asistencia</p>
-                        </div>
-                    `;
-                } else {
-                    bodyHtml = '<table class="att-table"><thead><tr><th>Fecha</th><th>Hora</th><th>Tipo</th></tr></thead><tbody>';
-                    data.registros.forEach(reg => {
-                        const fecha = new Date(reg.fecha_hora);
-                        const fechaStr = fecha.toLocaleDateString('es-ES');
-                        const horaStr = fecha.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-                        const esEntrada = reg.tipo === 'entrada';
-                        const badge = esEntrada
-                            ? '<span class="badge-entrada">Entrada</span>'
-                            : '<span class="badge-salida">Salida</span>';
-                        bodyHtml += `<tr><td>${fechaStr}</td><td>${horaStr}</td><td>${badge}</td></tr>`;
-                    });
-                    bodyHtml += '</tbody></table>';
-                }
-
-                const modal = document.createElement('div');
-                modal.className = 'modal-overlay';
-                modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
-                modal.innerHTML = `
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>${data.nombre}</h2>
-                            <p>${data.total_registros} registros de asistencia</p>
-                        </div>
-                        <div class="modal-body">
-                            ${bodyHtml}
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-ghost" onclick="this.closest('.modal-overlay').remove()">Cerrar</button>
-                        </div>
-                    </div>
-                `;
-
-                document.body.appendChild(modal);
-            } catch (error) {
-                mostrarAlerta(error.message, 'error');
-            }
-        }
-    </script>
+    <script src="/static/js/app.js"></script>
 </body>
 </html>
