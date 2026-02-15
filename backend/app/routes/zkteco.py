@@ -114,6 +114,7 @@ class ExportarUsuarioRequest(BaseModel):
     privilegio: int = 0  # 0=Usuario, 14=Admin
 
 
+
 @router.get("/turnos")
 def obtener_turnos():
     """Retorna los turnos disponibles con sus horarios"""
@@ -204,8 +205,7 @@ def sincronizar_usuarios(db: Session = Depends(get_db)):
                     nombre=usuario["nombre"] if usuario["nombre"] else f"Usuario {usuario['user_id']}",
                     apellido="",
                     documento=str(usuario["card"]) if usuario["card"] else f"ZK-{usuario['user_id']}",
-                    puesto="Sin especificar",
-                    departamento="Sin especificar",
+                    puesto="otros",
                 )
                 db.add(nuevo_personal)
                 sincronizados += 1

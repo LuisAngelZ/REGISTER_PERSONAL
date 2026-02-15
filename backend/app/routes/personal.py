@@ -3,11 +3,14 @@ Rutas CRUD para gestionar Personal
 """
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
 from app.database.db import get_db
 from app.models.personal import Personal
 from pydantic import BaseModel
 from typing import List, Optional
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+from calendar import monthrange
+from collections import defaultdict
 
 router = APIRouter(prefix="/api/personal", tags=["Personal"])
 
@@ -252,3 +255,193 @@ def obtener_asistencia_personal(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# REPORTE MENSUAL
+@router.get("/{personal_id}/reporte-mensual")
+def reporte_mensual(
+    personal_id: int,
+    mes: int = None,
+    anio: int = None,
+    db: Session = Depends(get_db),
+):
+    """Genera reporte mensual de asistencia con horas de ingreso/salida por dia"""
+    from app.models.asistencia import Asistencia
+
+    if mes is None:
+        mes = datetime.now().month
+    if anio is None:
+        anio = datetime.now().year
+
+    personal = db.query(Personal).filter(Personal.id == personal_id).first()
+    if not personal:
+        raise HTTPException(status_code=404, detail="Personal no encontrado")
+
+    dias_en_mes = monthrange(anio, mes)[1]
+    fecha_inicio = datetime(anio, mes, 1)
+    fecha_fin = datetime(anio, mes, dias_en_mes, 23, 59, 59)
+
+    registros = db.query(Asistencia).filter(
+        and_(
+            Asistencia.personal_id == personal_id,
+            Asistencia.fecha_hora >= fecha_inicio,
+            Asistencia.fecha_hora <= fecha_fin,
+        )
+    ).order_by(Asistencia.fecha_hora.asc()).all()
+
+    por_fecha = defaultdict(list)
+    for reg in registros:
+        fecha_str = reg.fecha_hora.strftime("%Y-%m-%d")
+        por_fecha[fecha_str].append({
+            "id": reg.id,
+            "tipo": reg.tipo,
+            "hora": reg.fecha_hora.strftime("%H:%M"),
+            "fecha_hora": reg.fecha_hora.isoformat(),
+        })
+
+    dias = []
+    dias_trabajados = 0
+    dias_falta = 0
+    total_minutos_retraso = 0
+    total_minutos_extra = 0
+    hora_entrada_esperada = personal.hora_entrada or "08:00"
+    hora_salida_esperada = personal.hora_salida or "17:00"
+    dia_libre = personal.dia_libre or "domingo"
+
+    DIAS_SEMANA_MAP = {0: "lunes", 1: "martes", 2: "miercoles", 3: "jueves", 4: "viernes", 5: "sabado", 6: "domingo"}
+
+    for dia in range(1, dias_en_mes + 1):
+        fecha = date(anio, mes, dia)
+        fecha_str = fecha.strftime("%Y-%m-%d")
+        dow = DIAS_SEMANA_MAP[fecha.weekday()]
+        es_libre = (dow == dia_libre)
+
+        regs = por_fecha.get(fecha_str, [])
+        entradas = [r for r in regs if r["tipo"] == "entrada"]
+        salidas = [r for r in regs if r["tipo"] == "salida"]
+
+        hora_ingreso = entradas[0]["hora"] if entradas else None
+        hora_salida_real = salidas[-1]["hora"] if salidas else None
+
+        minutos_retraso = 0
+        minutos_extra = 0
+        if hora_ingreso and not es_libre:
+            try:
+                entrada_real = datetime.strptime(hora_ingreso, "%H:%M")
+                entrada_esperada = datetime.strptime(hora_entrada_esperada, "%H:%M")
+                diff = (entrada_real - entrada_esperada).total_seconds() / 60
+                if diff > 0:
+                    minutos_retraso = int(diff)
+            except Exception:
+                pass
+
+        if hora_salida_real and not es_libre:
+            try:
+                salida_real = datetime.strptime(hora_salida_real, "%H:%M")
+                salida_esperada = datetime.strptime(hora_salida_esperada, "%H:%M")
+                diff = (salida_real - salida_esperada).total_seconds() / 60
+                if diff > 0:
+                    minutos_extra = int(diff)
+            except Exception:
+                pass
+
+        trabajo = bool(hora_ingreso or hora_salida_real)
+        if trabajo and not es_libre:
+            dias_trabajados += 1
+            total_minutos_retraso += minutos_retraso
+            total_minutos_extra += minutos_extra
+        elif not es_libre and fecha <= date.today():
+            dias_falta += 1
+
+        dias.append({
+            "fecha": fecha_str,
+            "dia_semana": dow,
+            "es_libre": es_libre,
+            "hora_ingreso": hora_ingreso,
+            "hora_salida": hora_salida_real,
+            "minutos_retraso": minutos_retraso,
+            "minutos_extra": minutos_extra,
+            "trabajo": trabajo,
+        })
+
+    return {
+        "personal_id": personal.id,
+        "nombre": f"{personal.nombre} {personal.apellido}",
+        "puesto": personal.puesto,
+        "turno": personal.turno,
+        "hora_entrada": hora_entrada_esperada,
+        "hora_salida": hora_salida_esperada,
+        "dia_libre": dia_libre,
+        "mes": mes,
+        "anio": anio,
+        "dias_en_mes": dias_en_mes,
+        "dias_trabajados": dias_trabajados,
+        "dias_falta": dias_falta,
+        "total_minutos_retraso": total_minutos_retraso,
+        "total_minutos_extra": total_minutos_extra,
+        "dias": dias,
+    }
+
+
+class AsistenciaManualRequest(BaseModel):
+    personal_id: int
+    fecha: str  # YYYY-MM-DD
+    hora_ingreso: Optional[str] = None  # HH:MM
+    hora_salida: Optional[str] = None  # HH:MM
+
+
+@router.post("/asistencia-manual")
+def registrar_asistencia_manual(data: AsistenciaManualRequest, db: Session = Depends(get_db)):
+    """Registra o actualiza manualmente la asistencia de un dia"""
+    from app.models.asistencia import Asistencia
+
+    personal = db.query(Personal).filter(Personal.id == data.personal_id).first()
+    if not personal:
+        raise HTTPException(status_code=404, detail="Personal no encontrado")
+
+    fecha_date = datetime.strptime(data.fecha, "%Y-%m-%d").date()
+    fecha_inicio_dt = datetime(fecha_date.year, fecha_date.month, fecha_date.day, 0, 0, 0)
+    fecha_fin_dt = datetime(fecha_date.year, fecha_date.month, fecha_date.day, 23, 59, 59)
+
+    db.query(Asistencia).filter(
+        and_(
+            Asistencia.personal_id == data.personal_id,
+            Asistencia.fecha_hora >= fecha_inicio_dt,
+            Asistencia.fecha_hora <= fecha_fin_dt,
+        )
+    ).delete()
+
+    registros_creados = 0
+
+    if data.hora_ingreso:
+        h, m = data.hora_ingreso.split(":")
+        db.add(Asistencia(
+            personal_id=data.personal_id,
+            user_id=personal.user_id,
+            tipo="entrada",
+            fecha_hora=datetime(fecha_date.year, fecha_date.month, fecha_date.day, int(h), int(m)),
+            dispositivo_ip="manual",
+            sincronizado="S",
+            fecha_sincronizacion=datetime.utcnow(),
+        ))
+        registros_creados += 1
+
+    if data.hora_salida:
+        h, m = data.hora_salida.split(":")
+        db.add(Asistencia(
+            personal_id=data.personal_id,
+            user_id=personal.user_id,
+            tipo="salida",
+            fecha_hora=datetime(fecha_date.year, fecha_date.month, fecha_date.day, int(h), int(m)),
+            dispositivo_ip="manual",
+            sincronizado="S",
+            fecha_sincronizacion=datetime.utcnow(),
+        ))
+        registros_creados += 1
+
+    db.commit()
+    return {
+        "status": "ok",
+        "registros_creados": registros_creados,
+        "mensaje": f"Asistencia del {data.fecha} actualizada correctamente",
+    }

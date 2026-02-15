@@ -24,10 +24,13 @@ class ZKTecoService:
         """
         Conecta al dispositivo ZKTeco.
         Retorna la conexión activa o lanza excepción.
+        Intenta con ommit_ping=True si el primer intento falla.
         """
         try:
             self.desconectar()
-            zk = ZK(self.ip, port=self.port, timeout=self.timeout, password=self.password)
+            # Primer intento: con ommit_ping para evitar fallo de ping en Windows
+            zk = ZK(self.ip, port=self.port, timeout=self.timeout, password=self.password,
+                     force_udp=False, ommit_ping=True)
             self._conn = zk.connect()
             logger.info(f"Conectado a ZKTeco en {self.ip}:{self.port}")
             return self._conn
