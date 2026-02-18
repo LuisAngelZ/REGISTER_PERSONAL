@@ -1,10 +1,12 @@
 """
 Rutas para integración con dispositivo biométrico ZKTeco
 """
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import Optional
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from app.services.zkteco_service import zkteco_service
 from app.database.db import get_db
 from app.models.personal import Personal
@@ -18,6 +20,7 @@ import json
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/zkteco", tags=["ZKTeco"])
+limiter = Limiter(key_func=get_remote_address)
 
 CONFIG_FILE = Path(__file__).parent.parent.parent / "device_config.json"
 
@@ -149,7 +152,8 @@ def configurar_ip(config: ConfigurarIPRequest):
 
 
 @router.get("/test-conexion")
-def test_conexion():
+@limiter.limit("10/minute")
+def test_conexion(request: Request):
     """Prueba la conexión con el dispositivo ZKTeco"""
     resultado = zkteco_service.test_conexion()
     if resultado["conectado"]:
@@ -181,7 +185,8 @@ def obtener_usuarios():
 
 
 @router.post("/sincronizar-usuarios")
-def sincronizar_usuarios(db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+def sincronizar_usuarios(request: Request, db: Session = Depends(get_db)):
     """
     IMPORTAR: Sincroniza usuarios del dispositivo hacia la base de datos.
     Crea registros de personal nuevos para usuarios que no existen.
@@ -326,7 +331,8 @@ def exportar_todos_usuarios(db: Session = Depends(get_db)):
 
 
 @router.delete("/eliminar-usuario/{uid}")
-def eliminar_usuario_dispositivo(uid: int):
+@limiter.limit("10/minute")
+def eliminar_usuario_dispositivo(uid: int, request: Request):
     """Elimina un usuario del dispositivo biométrico por su UID"""
     try:
         zkteco_service.eliminar_usuario(uid=uid)
@@ -376,7 +382,8 @@ def obtener_registros():
 
 
 @router.post("/sincronizar-registros")
-def sincronizar_registros(db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+def sincronizar_registros(request: Request, db: Session = Depends(get_db)):
     """
     IMPORTAR: Sincroniza registros de asistencia del dispositivo a la BD.
     Usa detección automática: alterna entrada/salida por usuario por día.
@@ -443,7 +450,8 @@ def sincronizar_registros(db: Session = Depends(get_db)):
 
 
 @router.post("/re-sincronizar-registros")
-def re_sincronizar_registros(db: Session = Depends(get_db)):
+@limiter.limit("2/minute")
+def re_sincronizar_registros(request: Request, db: Session = Depends(get_db)):
     """
     Borra TODOS los registros de asistencia y los re-importa con tipos corregidos.
     Útil cuando los registros anteriores tienen tipo incorrecto.

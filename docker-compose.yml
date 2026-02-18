@@ -3,15 +3,15 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: registro_personal
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secreto123
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d registro_personal"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -21,17 +21,45 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000"
-    environment:
-      DATABASE_URL: postgresql://admin:secreto123@db:5432/registro_personal
-      ZKTECO_IP: 192.168.100.200
-      ZKTECO_PORT: 4370
-      ZKTECO_TIMEOUT: 15
-      ZKTECO_PASSWORD: 123456
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
     volumes:
       - ./backend/device_config.json:/app/backend/device_config.json
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  backup:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+    volumes:
+      - ./backups:/backups
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Backup service iniciado - cada 6 horas"
+        while true; do
+          FECHA=$$(date +%Y%m%d_%H%M%S)
+          pg_dump -Fc > /backups/backup_$$FECHA.dump
+          echo "Backup creado: backup_$$FECHA.dump"
+          # Mantener solo los ultimos 10 backups
+          ls -t /backups/backup_*.dump 2>/dev/null | tail -n +11 | xargs rm -f 2>/dev/null
+          sleep 21600
+        done
 
 volumes:
   pgdata:
