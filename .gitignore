@@ -8,3 +8,5 @@ __pycache__/
 nul
 device_config.json
 device_schedule.json
+backups/
+ssl/

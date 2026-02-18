@@ -7,16 +7,54 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
-    <!-- ============ LOGIN SCREEN ============ -->
-    <div id="loginScreen" class="login-screen">
+    <!-- ============ AUTH LOGIN SCREEN ============ -->
+    <div id="authScreen" class="login-screen" style="display:none;">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="icon-circle">&#128100;</div>
+                <h1 id="authTitle">Iniciar Sesion</h1>
+                <p id="authSubtitle">Ingresa tus credenciales</p>
+            </div>
+
+            <div class="form-group">
+                <label>Usuario</label>
+                <input type="text" class="form-input" id="authUsername" placeholder="Tu usuario" onkeypress="if(event.key==='Enter')loginUsuario()">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-input" id="authPassword" placeholder="Tu password" onkeypress="if(event.key==='Enter')loginUsuario()">
+            </div>
+
+            <!-- Campos extra para registro (ocultos por defecto) -->
+            <div id="authRegistroFields" style="display:none;">
+                <div class="form-group">
+                    <label>Nombre completo</label>
+                    <input type="text" class="form-input" id="authNombre" placeholder="Tu nombre">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="btnAuth" onclick="loginUsuario()" style="margin-top:20px;">Ingresar</button>
+
+            <div id="authStatus" class="login-status"></div>
+
+            <div class="login-divider">o</div>
+
+            <button class="btn btn-ghost" id="btnToggleRegistro" onclick="toggleRegistro()">Crear cuenta nueva</button>
+        </div>
+    </div>
+
+    <!-- ============ DEVICE LOGIN SCREEN ============ -->
+    <div id="loginScreen" class="login-screen" style="display:none;">
         <div class="login-card">
             <div class="login-header">
                 <div class="icon-circle">&#128274;</div>
-                <h1>Acceso al Sistema</h1>
-                <p>Conecta tu dispositivo biometrico ZKTeco para ingresar</p>
+                <h1>Conectar Dispositivo</h1>
+                <p>Conecta tu dispositivo biometrico ZKTeco</p>
+                <p id="loginUserInfo" style="font-size:0.8rem;color:var(--accent);margin-top:4px;"></p>
             </div>
 
             <div class="form-group">
@@ -50,15 +88,21 @@
             <div class="navbar-brand">
                 &#9881; Registro de Personal <span>| ZKTeco</span>
             </div>
-            <div id="devicePill" class="device-pill connecting">
-                <span class="pill-dot yellow"></span>
-                <span class="pill-text" id="devicePillText">Conectando...</span>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div id="devicePill" class="device-pill connecting">
+                    <span class="pill-dot yellow"></span>
+                    <span class="pill-text" id="devicePillText">Conectando...</span>
+                </div>
+                <span id="navUserInfo" style="font-size:0.75rem;color:var(--slate-400);"></span>
+                <button class="dark-toggle" onclick="toggleDarkMode()" title="Modo oscuro">&#9790;</button>
+                <button class="btn btn-sm btn-ghost" id="btnLogout" onclick="cerrarSesion()" style="display:none;font-size:0.75rem;padding:4px 10px;">Salir</button>
             </div>
         </nav>
 
         <!-- Section Navigation -->
         <div class="section-nav">
             <button class="nav-item active" onclick="switchSection('personal', this)">Personal</button>
+            <button class="nav-item" onclick="switchSection('dashboard', this); cargarDashboard();">Dashboard</button>
             <button class="nav-item" onclick="switchSection('registrar', this)">Registrar</button>
             <button class="nav-item" onclick="switchSection('editar-section', this)">Editar</button>
             <button class="nav-item" onclick="switchSection('reporte', this); cargarReporteInit();">Reporte</button>
@@ -89,14 +133,72 @@
                     </div>
                 </div>
 
-                <div class="search-bar">
-                    <input type="text" id="filtroNombre" placeholder="Buscar por CI o nombre..." oninput="cargarPersonal()">
+                <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;">
+                    <div class="search-bar" style="flex:1;margin-bottom:0;">
+                        <input type="text" id="filtroNombre" placeholder="Buscar por CI o nombre..." oninput="cargarPersonal(1)">
+                    </div>
+                    <button class="btn btn-sm btn-ghost" onclick="exportarListaPersonal('csv')" title="Exportar CSV">CSV</button>
+                    <button class="btn btn-sm btn-ghost" onclick="exportarListaPersonal('excel')" title="Exportar Excel">Excel</button>
                 </div>
 
                 <div id="personnelContainer" class="personnel-grid">
                     <div class="empty-state" style="grid-column:1/-1;">
                         <div class="spinner"></div>
                         <p style="margin-top:12px;">Cargando personal...</p>
+                    </div>
+                </div>
+                <div id="paginationControls" class="pagination"></div>
+            </div>
+
+            <!-- ====== SECTION: Dashboard ====== -->
+            <div id="dashboard" class="section">
+                <div class="card">
+                    <div class="card-header" style="flex-wrap:wrap;gap:10px;">
+                        <h3>Dashboard de Asistencia</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <select class="form-input" id="dashMes" style="width:auto;" onchange="cargarDashboard()">
+                                <option value="0">Enero</option><option value="1">Febrero</option>
+                                <option value="2">Marzo</option><option value="3">Abril</option>
+                                <option value="4">Mayo</option><option value="5">Junio</option>
+                                <option value="6">Julio</option><option value="7">Agosto</option>
+                                <option value="8">Septiembre</option><option value="9">Octubre</option>
+                                <option value="10">Noviembre</option><option value="11">Diciembre</option>
+                            </select>
+                            <input type="number" class="form-input" id="dashAnio" style="width:90px;" value="2026" onchange="cargarDashboard()">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Stats generales -->
+                        <div class="stats-grid" id="dashStats">
+                            <div class="stat-card"><div class="stat-label">Personal Activo</div><div class="stat-value" id="dashTotal">-</div></div>
+                            <div class="stat-card"><div class="stat-label">Total Faltas</div><div class="stat-value" id="dashFaltas" style="color:var(--danger);">-</div></div>
+                            <div class="stat-card"><div class="stat-label">Min. Retraso</div><div class="stat-value" id="dashRetrasos" style="color:var(--warning, #f59e0b);">-</div></div>
+                            <div class="stat-card"><div class="stat-label">Min. Extra</div><div class="stat-value" id="dashExtras" style="color:var(--success);">-</div></div>
+                        </div>
+
+                        <!-- Distribucion por puesto -->
+                        <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;">
+                            <div class="card" style="flex:1;min-width:280px;">
+                                <div class="card-header"><h3>Por Puesto</h3></div>
+                                <div class="card-body">
+                                    <canvas id="chartPuestos" height="220"></canvas>
+                                </div>
+                            </div>
+                            <div class="card" style="flex:1;min-width:280px;">
+                                <div class="card-header"><h3>Top 5 - Mas Retrasos</h3></div>
+                                <div class="card-body">
+                                    <canvas id="chartRetrasos" height="220"></canvas>
+                                    <p id="dashTopRetrasosEmpty" style="display:none;color:var(--slate-400);font-size:0.85rem;">Sin retrasos este mes</p>
+                                </div>
+                            </div>
+                            <div class="card" style="flex:1;min-width:280px;">
+                                <div class="card-header"><h3>Top 5 - Mas Faltas</h3></div>
+                                <div class="card-body">
+                                    <canvas id="chartFaltas" height="220"></canvas>
+                                    <p id="dashTopFaltasEmpty" style="display:none;color:var(--slate-400);font-size:0.85rem;">Sin faltas este mes</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -315,6 +417,10 @@
                 <div class="card">
                     <div class="card-header" style="flex-wrap:wrap;gap:10px;">
                         <h3>Reporte de Asistencia</h3>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-sm btn-success" onclick="exportarReporte('csv')">Exportar CSV</button>
+                            <button class="btn btn-sm btn-info" onclick="exportarReporte('excel')">Exportar Excel</button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <!-- Controls row -->
@@ -474,6 +580,13 @@
         </div>
     </div>
 
+    <script src="/static/js/helpers.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/device.js"></script>
+    <script src="/static/js/personal.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+    <script src="/static/js/reporte.js"></script>
+    <script src="/static/js/rol.js"></script>
     <script src="/static/js/app.js"></script>
 </body>
 </html>
