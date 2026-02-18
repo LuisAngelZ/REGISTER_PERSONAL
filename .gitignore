@@ -1,12 +1,37 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+
+# Bases de datos
 *.db
+*.sqlite
+*.sqlite3
+
+# Variables de entorno (NUNCA subir)
 .env
+
+# Editores
 .vscode/
 .claude/
+.idea/
+
+# Archivos temporales del sistema
 nul
+Thumbs.db
+.DS_Store
+
+# Configuracion del dispositivo (generada en runtime)
 device_config.json
 device_schedule.json
+
+# Backups y certificados
 backups/
 ssl/
+
+# Logs
+*.log
