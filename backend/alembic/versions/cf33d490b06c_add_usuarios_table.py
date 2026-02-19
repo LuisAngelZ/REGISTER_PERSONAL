@@ -9,6 +9,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import inspect
 
 
 # revision identifiers, used by Alembic.
@@ -19,19 +20,21 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    """Upgrade schema."""
-    op.create_table('usuarios',
-        sa.Column('id', sa.Integer(), nullable=False),
-        sa.Column('username', sa.String(length=50), nullable=False),
-        sa.Column('password_hash', sa.String(length=255), nullable=False),
-        sa.Column('nombre', sa.String(length=100), nullable=False),
-        sa.Column('rol', sa.String(length=20), nullable=True),
-        sa.Column('activo', sa.Boolean(), nullable=True),
-        sa.Column('fecha_creacion', sa.DateTime(), nullable=True),
-        sa.PrimaryKeyConstraint('id'),
-    )
-    op.create_index(op.f('ix_usuarios_id'), 'usuarios', ['id'], unique=False)
-    op.create_index(op.f('ix_usuarios_username'), 'usuarios', ['username'], unique=True)
+    """Upgrade schema - idempotente: no crea la tabla si ya existe."""
+    conn = op.get_bind()
+    if not inspect(conn).has_table('usuarios'):
+        op.create_table('usuarios',
+            sa.Column('id', sa.Integer(), nullable=False),
+            sa.Column('username', sa.String(length=50), nullable=False),
+            sa.Column('password_hash', sa.String(length=255), nullable=False),
+            sa.Column('nombre', sa.String(length=100), nullable=False),
+            sa.Column('rol', sa.String(length=20), nullable=True),
+            sa.Column('activo', sa.Boolean(), nullable=True),
+            sa.Column('fecha_creacion', sa.DateTime(), nullable=True),
+            sa.PrimaryKeyConstraint('id'),
+        )
+        op.create_index(op.f('ix_usuarios_id'), 'usuarios', ['id'], unique=False)
+        op.create_index(op.f('ix_usuarios_username'), 'usuarios', ['username'], unique=True)
 
 
 def downgrade() -> None:

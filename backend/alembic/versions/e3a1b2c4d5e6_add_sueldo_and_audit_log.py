@@ -9,6 +9,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import inspect
 
 
 # revision identifiers, used by Alembic.
@@ -19,25 +20,30 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    """Upgrade schema."""
-    # Columna sueldo en personal
-    op.add_column('personal', sa.Column('sueldo', sa.Numeric(10, 2), nullable=True))
+    """Upgrade schema - idempotente: verifica existencia antes de crear."""
+    conn = op.get_bind()
 
-    # Tabla audit_log
-    op.create_table(
-        'audit_log',
-        sa.Column('id', sa.Integer(), nullable=False),
-        sa.Column('accion', sa.String(length=50), nullable=False),
-        sa.Column('entidad', sa.String(length=50), nullable=True),
-        sa.Column('entidad_id', sa.Integer(), nullable=True),
-        sa.Column('detalle', sa.Text(), nullable=True),
-        sa.Column('usuario', sa.String(length=100), nullable=True),
-        sa.Column('ip', sa.String(length=50), nullable=True),
-        sa.Column('fecha', sa.DateTime(), nullable=True),
-        sa.PrimaryKeyConstraint('id'),
-    )
-    op.create_index(op.f('ix_audit_log_id'), 'audit_log', ['id'], unique=False)
-    op.create_index(op.f('ix_audit_log_fecha'), 'audit_log', ['fecha'], unique=False)
+    # Columna sueldo en personal (solo si no existe)
+    columns = [c['name'] for c in inspect(conn).get_columns('personal')]
+    if 'sueldo' not in columns:
+        op.add_column('personal', sa.Column('sueldo', sa.Numeric(10, 2), nullable=True))
+
+    # Tabla audit_log (solo si no existe)
+    if not inspect(conn).has_table('audit_log'):
+        op.create_table(
+            'audit_log',
+            sa.Column('id', sa.Integer(), nullable=False),
+            sa.Column('accion', sa.String(length=50), nullable=False),
+            sa.Column('entidad', sa.String(length=50), nullable=True),
+            sa.Column('entidad_id', sa.Integer(), nullable=True),
+            sa.Column('detalle', sa.Text(), nullable=True),
+            sa.Column('usuario', sa.String(length=100), nullable=True),
+            sa.Column('ip', sa.String(length=50), nullable=True),
+            sa.Column('fecha', sa.DateTime(), nullable=True),
+            sa.PrimaryKeyConstraint('id'),
+        )
+        op.create_index(op.f('ix_audit_log_id'), 'audit_log', ['id'], unique=False)
+        op.create_index(op.f('ix_audit_log_fecha'), 'audit_log', ['fecha'], unique=False)
 
 
 def downgrade() -> None:
