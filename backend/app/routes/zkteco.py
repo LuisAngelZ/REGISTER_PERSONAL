@@ -16,6 +16,7 @@ from collections import defaultdict
 from pathlib import Path
 import logging
 import json
+import socket
 
 logger = logging.getLogger(__name__)
 
@@ -177,8 +178,8 @@ def obtener_usuarios():
             "total": len(usuarios),
             "usuarios": usuarios,
         }
-    except ConnectionError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except (ConnectionError, OSError, socket.error) as e:
+        raise HTTPException(status_code=503, detail=f"Dispositivo no disponible: {e}")
     except Exception as e:
         logger.error(f"Error al obtener usuarios: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -229,8 +230,8 @@ def sincronizar_usuarios(request: Request, db: Session = Depends(get_db)):
             "total_en_dispositivo": len(usuarios),
             "mensaje": f"Se importaron {sincronizados} usuarios nuevos, {actualizados} actualizados",
         }
-    except ConnectionError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except (ConnectionError, OSError, socket.error) as e:
+        raise HTTPException(status_code=503, detail=f"Dispositivo no disponible: {e}")
     except Exception as e:
         db.rollback()
         logger.error(f"Error al sincronizar usuarios: {e}")
@@ -270,8 +271,8 @@ def exportar_usuario(data: ExportarUsuarioRequest, db: Session = Depends(get_db)
             "uid": uid,
             "nombre": nombre_completo,
         }
-    except ConnectionError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except (ConnectionError, OSError, socket.error) as e:
+        raise HTTPException(status_code=503, detail=f"Dispositivo no disponible: {e}")
     except HTTPException:
         raise
     except Exception as e:
@@ -322,8 +323,8 @@ def exportar_todos_usuarios(db: Session = Depends(get_db)):
             "errores": errores,
             "mensaje": f"Se exportaron {exportados} de {len(personal_list)} usuarios al dispositivo",
         }
-    except ConnectionError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except (ConnectionError, OSError, socket.error) as e:
+        raise HTTPException(status_code=503, detail=f"Dispositivo no disponible: {e}")
     except Exception as e:
         db.rollback()
         logger.error(f"Error en exportación masiva: {e}")
@@ -340,8 +341,8 @@ def eliminar_usuario_dispositivo(uid: int, request: Request):
             "status": "eliminado",
             "mensaje": f"Usuario con UID {uid} eliminado del dispositivo",
         }
-    except ConnectionError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except (ConnectionError, OSError, socket.error) as e:
+        raise HTTPException(status_code=503, detail=f"Dispositivo no disponible: {e}")
     except Exception as e:
         logger.error(f"Error al eliminar usuario del dispositivo: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -374,8 +375,8 @@ def obtener_registros():
             "duplicados_filtrados": duplicados,
             "registros": registros_formateados,
         }
-    except ConnectionError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except (ConnectionError, OSError, socket.error) as e:
+        raise HTTPException(status_code=503, detail=f"Dispositivo no disponible: {e}")
     except Exception as e:
         logger.error(f"Error al obtener registros: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -441,8 +442,8 @@ def sincronizar_registros(request: Request, db: Session = Depends(get_db)):
             "sin_personal_asociado": sin_personal,
             "mensaje": f"Se importaron {sincronizados} registros ({duplicados} duplicados filtrados)",
         }
-    except ConnectionError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except (ConnectionError, OSError, socket.error) as e:
+        raise HTTPException(status_code=503, detail=f"Dispositivo no disponible: {e}")
     except Exception as e:
         db.rollback()
         logger.error(f"Error al sincronizar registros: {e}")
@@ -511,8 +512,8 @@ def re_sincronizar_registros(request: Request, db: Session = Depends(get_db)):
             "sin_personal_asociado": sin_personal,
             "mensaje": f"Se eliminaron {eliminados} registros, se importaron {sincronizados} ({duplicados} duplicados filtrados)",
         }
-    except ConnectionError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except (ConnectionError, OSError, socket.error) as e:
+        raise HTTPException(status_code=503, detail=f"Dispositivo no disponible: {e}")
     except Exception as e:
         db.rollback()
         logger.error(f"Error en re-sincronización: {e}")
