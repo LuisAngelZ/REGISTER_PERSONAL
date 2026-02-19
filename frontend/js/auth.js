@@ -132,3 +132,91 @@ function cerrarSesion() {
     document.getElementById('navUserInfo').textContent = '';
     document.getElementById('btnLogout').style.display = 'none';
 }
+
+// ============ CAMBIAR PASSWORD ============
+async function cambiarPassword() {
+    const username = document.getElementById('cpUsername').value.trim();
+    const actual = document.getElementById('cpActual').value;
+    const nuevo = document.getElementById('cpNuevo').value;
+    const statusDiv = document.getElementById('cpStatus');
+
+    if (!username || !actual || !nuevo) {
+        statusDiv.className = 'connection-status error'; statusDiv.textContent = 'Completa todos los campos'; return;
+    }
+    if (nuevo.length < 8) {
+        statusDiv.className = 'connection-status error'; statusDiv.textContent = 'El nuevo password debe tener al menos 8 caracteres'; return;
+    }
+
+    statusDiv.className = 'connection-status conectando'; statusDiv.innerHTML = '<span class="spinner"></span> Cambiando...';
+    try {
+        const resp = await apiFetch(`${API_URL}/api/auth/cambiar-password`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password_actual: actual, password_nuevo: nuevo })
+        });
+        const data = await resp.json();
+        if (resp.ok) {
+            statusDiv.className = 'connection-status success'; statusDiv.textContent = 'Password cambiado correctamente';
+            document.getElementById('cpActual').value = '';
+            document.getElementById('cpNuevo').value = '';
+        } else {
+            statusDiv.className = 'connection-status error'; statusDiv.textContent = data.detail || 'Error al cambiar password';
+        }
+    } catch(e) {
+        statusDiv.className = 'connection-status error'; statusDiv.textContent = 'Error de conexion';
+    }
+}
+
+// ============ GESTION DE USUARIOS ============
+async function cargarUsuariosSistema() {
+    const container = document.getElementById('usuariosSistemaContainer');
+    container.innerHTML = '<span class="spinner"></span>';
+    try {
+        const resp = await apiFetch(`${API_URL}/api/auth/usuarios`);
+        if (!resp.ok) throw new Error('Error al cargar usuarios');
+        const usuarios = await resp.json();
+        if (!usuarios.length) {
+            container.innerHTML = '<p style="color:var(--slate-400);font-size:0.85rem;">No hay usuarios registrados</p>';
+            return;
+        }
+        container.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+            <thead><tr style="background:var(--slate-100);">
+                <th style="padding:8px 12px;text-align:left;">Usuario</th>
+                <th style="padding:8px 12px;text-align:left;">Nombre</th>
+                <th style="padding:8px 12px;text-align:left;">Rol</th>
+                <th style="padding:8px 12px;text-align:left;">Estado</th>
+                <th style="padding:8px 12px;"></th>
+            </tr></thead>
+            <tbody>${usuarios.map(u => `
+                <tr style="border-top:1px solid var(--slate-200);">
+                    <td style="padding:8px 12px;">${escapeHtml(u.username)}</td>
+                    <td style="padding:8px 12px;">${escapeHtml(u.nombre)}</td>
+                    <td style="padding:8px 12px;"><span class="tag">${escapeHtml(u.rol)}</span></td>
+                    <td style="padding:8px 12px;"><span class="person-status ${u.activo ? 'active' : 'inactive'}">${u.activo ? 'Activo' : 'Inactivo'}</span></td>
+                    <td style="padding:8px 12px;">
+                        ${u.activo ? `<button class="btn btn-sm btn-danger" onclick="desactivarUsuario(${u.id},'${escapeHtml(u.username)}')">Desactivar</button>` : ''}
+                    </td>
+                </tr>`).join('')}
+            </tbody>
+        </table>`;
+    } catch(e) {
+        container.innerHTML = `<p style="color:var(--danger);font-size:0.85rem;">${escapeHtml(e.message)}</p>`;
+    }
+}
+
+function desactivarUsuario(id, username) {
+    confirmar('Desactivar Usuario', `Desactivar el usuario "${username}" del sistema?`, async () => {
+        try {
+            const resp = await apiFetch(`${API_URL}/api/auth/usuarios/${id}`, { method: 'DELETE' });
+            const data = await resp.json();
+            if (resp.ok) {
+                mostrarAlerta(data.mensaje, 'success');
+                cargarUsuariosSistema();
+            } else {
+                mostrarAlerta(data.detail || 'Error al desactivar', 'error');
+            }
+        } catch(e) {
+            mostrarAlerta('Error de conexion', 'error');
+        }
+    });
+}

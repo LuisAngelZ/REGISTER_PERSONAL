@@ -19,6 +19,12 @@ services:
   app:
     build: .
     restart: unless-stopped
+    # NOTA red ZKTeco: en Linux el contenedor con bridge puede alcanzar la LAN via NAT del host.
+    # Si el dispositivo (192.168.100.200) NO es accesible, usa network_mode: host:
+    #   1. Descomenta: network_mode: host
+    #   2. Comenta las lineas 'ports' de abajo
+    #   3. En .env cambia DATABASE_URL: db:5432 -> localhost:5432
+    # network_mode: host
     ports:
       - "8000:8000"
     env_file:

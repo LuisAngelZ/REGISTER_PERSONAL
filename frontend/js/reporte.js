@@ -28,9 +28,19 @@ async function cargarReporte() {
     const anio = parseInt(document.getElementById('reporteAnio').value);
 
     try {
-        const resp = await apiFetch(`${API_URL}/api/personal/${personalId}/reporte-mensual?mes=${mes}&anio=${anio}`);
-        if (!resp.ok) throw new Error('Error al cargar reporte');
-        _reporteData = await resp.json();
+        const [repResp, perResp] = await Promise.all([
+            apiFetch(`${API_URL}/api/personal/${personalId}/reporte-mensual?mes=${mes}&anio=${anio}`),
+            apiFetch(`${API_URL}/api/personal/${personalId}`),
+        ]);
+        if (!repResp.ok) throw new Error('Error al cargar reporte');
+        _reporteData = await repResp.json();
+        // Pre-llenar sueldo desde la BD si existe
+        if (perResp.ok) {
+            const per = await perResp.json();
+            if (per.sueldo) {
+                document.getElementById('reporteSueldo').value = parseFloat(per.sueldo);
+            }
+        }
         renderReporte();
     } catch(e) {
         mostrarAlerta(e.message, 'error');
@@ -79,6 +89,20 @@ function renderReporte() {
     document.getElementById('repMinExtra').textContent = data.total_minutos_extra;
 
     recalcularSalario();
+}
+
+async function guardarSueldo() {
+    if (!_reporteData) return;
+    const personalId = document.getElementById('reportePersonal').value;
+    if (!personalId) return;
+    const sueldo = parseFloat(document.getElementById('reporteSueldo').value) || null;
+    try {
+        await apiFetch(`${API_URL}/api/personal/${personalId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sueldo }),
+        });
+    } catch(e) { /* silencioso */ }
 }
 
 function recalcularSalario() {

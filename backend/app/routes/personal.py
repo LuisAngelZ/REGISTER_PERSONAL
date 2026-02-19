@@ -51,6 +51,7 @@ class PersonalCreate(BaseModel):
     fecha_inicio: Optional[date] = None
     duracion_contrato: Optional[str] = "3_meses"
     dia_libre: Optional[str] = "domingo"
+    sueldo: Optional[float] = None
 
     @field_validator("nombre", "apellido")
     @classmethod
@@ -116,6 +117,7 @@ class PersonalUpdate(BaseModel):
     fecha_inicio: Optional[date] = None
     duracion_contrato: Optional[str] = None
     dia_libre: Optional[str] = None
+    sueldo: Optional[float] = None
     activo: Optional[bool] = None
 
     @field_validator("nombre", "apellido")
@@ -187,6 +189,7 @@ class PersonalResponse(BaseModel):
     duracion_contrato: Optional[str]
     fecha_fin: Optional[date]
     dia_libre: Optional[str]
+    sueldo: Optional[float]
     activo: bool
 
     class Config:
@@ -212,6 +215,7 @@ def crear_personal(personal: PersonalCreate, db: Session = Depends(get_db)):
             fecha_inicio=personal.fecha_inicio,
             duracion_contrato=personal.duracion_contrato,
             dia_libre=personal.dia_libre,
+            sueldo=personal.sueldo,
         )
         nuevo_personal.calcular_fecha_fin()
 
@@ -300,21 +304,26 @@ def dashboard_stats(
 
     DIAS_SEMANA_MAP = {0: "lunes", 1: "martes", 2: "miercoles", 3: "jueves", 4: "viernes", 5: "sabado", 6: "domingo"}
 
-    for p in personal_activo:
-        por_puesto[p.puesto or "otros"] += 1
-
-        registros = db.query(Asistencia).filter(
+    # Una sola query para todos los registros del mes (evita N+1)
+    ids_activos = [p.id for p in personal_activo]
+    todos_registros = []
+    if ids_activos:
+        todos_registros = db.query(Asistencia).filter(
             and_(
-                Asistencia.personal_id == p.id,
+                Asistencia.personal_id.in_(ids_activos),
                 Asistencia.fecha_hora >= fecha_inicio_dt,
                 Asistencia.fecha_hora <= fecha_fin_dt,
             )
         ).order_by(Asistencia.fecha_hora.asc()).all()
 
-        por_fecha = defaultdict(list)
-        for reg in registros:
-            fecha_str = reg.fecha_hora.strftime("%Y-%m-%d")
-            por_fecha[fecha_str].append(reg)
+    registros_por_personal: dict = defaultdict(lambda: defaultdict(list))
+    for reg in todos_registros:
+        fecha_str = reg.fecha_hora.strftime("%Y-%m-%d")
+        registros_por_personal[reg.personal_id][fecha_str].append(reg)
+
+    for p in personal_activo:
+        por_puesto[p.puesto or "otros"] += 1
+        por_fecha = registros_por_personal[p.id]
 
         dias_trabajados = 0
         dias_falta = 0
@@ -576,7 +585,7 @@ def actualizar_personal(
         if not personal:
             raise HTTPException(status_code=404, detail="Personal no encontrado")
 
-        update_data = personal_update.dict(exclude_unset=True)
+        update_data = personal_update.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(personal, field, value)
 

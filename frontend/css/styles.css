@@ -427,6 +427,27 @@ select.form-input {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
+.contrato-alert {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.contrato-alert.vencido {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid #fca5a5;
+}
+.contrato-alert.proximo {
+    background: var(--warning-bg);
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
 .person-top {
     display: flex;
     align-items: flex-start;

@@ -106,7 +106,7 @@
             <button class="nav-item" onclick="switchSection('registrar', this)">Registrar</button>
             <button class="nav-item" onclick="switchSection('editar-section', this)">Editar</button>
             <button class="nav-item" onclick="switchSection('reporte', this); cargarReporteInit();">Reporte</button>
-            <button class="nav-item" onclick="switchSection('configuracion', this)">Configuracion</button>
+            <button class="nav-item" onclick="switchSection('configuracion', this); if(usuarioActual) document.getElementById('cpUsername').value=usuarioActual.username;">Configuracion</button>
             <button class="nav-item" onclick="switchSection('rol-libres', this); generarRolLibres();">Rol de Libres</button>
         </div>
 
@@ -454,7 +454,7 @@
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Sueldo (Bs)</label>
-                                <input type="number" class="form-input" id="reporteSueldo" value="2362" step="0.01" style="width:120px;" onchange="recalcularSalario()">
+                                <input type="number" class="form-input" id="reporteSueldo" value="2362" step="0.01" style="width:120px;" onchange="recalcularSalario();guardarSueldo()">
                             </div>
                         </div>
 
@@ -571,6 +571,44 @@
                             <p style="font-size:0.85rem;color:var(--slate-500);margin-bottom:16px;">Importa los usuarios registrados en el biometrico a la base de datos local.</p>
                             <button class="btn btn-primary" onclick="sincronizarUsuarios()">Importar Usuarios</button>
                             <div id="syncStatus" class="connection-status"></div>
+                        </div>
+                    </div>
+
+                    <!-- Cambiar Password -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Cambiar Password</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Usuario</label>
+                                <input type="text" class="form-input" id="cpUsername" placeholder="Tu usuario">
+                            </div>
+                            <div class="form-group">
+                                <label>Password Actual</label>
+                                <input type="password" class="form-input" id="cpActual" placeholder="Password actual">
+                            </div>
+                            <div class="form-group">
+                                <label>Password Nuevo</label>
+                                <input type="password" class="form-input" id="cpNuevo" placeholder="Min 8 caracteres">
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-primary" onclick="cambiarPassword()">Cambiar Password</button>
+                            </div>
+                            <div id="cpStatus" class="connection-status"></div>
+                        </div>
+                    </div>
+
+                    <!-- Gestion de Usuarios -->
+                    <div class="card" style="grid-column:1/-1;">
+                        <div class="card-header">
+                            <h3>Usuarios del Sistema</h3>
+                            <button class="btn btn-sm btn-ghost" onclick="cargarUsuariosSistema()">Actualizar</button>
+                        </div>
+                        <div class="card-body">
+                            <div id="usuariosSistemaContainer">
+                                <p style="color:var(--slate-400);font-size:0.85rem;">Haz clic en Actualizar para ver los usuarios</p>
+                            </div>
                         </div>
                     </div>
 

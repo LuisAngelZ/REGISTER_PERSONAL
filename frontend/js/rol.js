@@ -82,6 +82,14 @@ async function generarRolLibres() {
         if (resp.ok) _rolPersonal = await resp.json();
     } catch(e) { console.error(e); }
 
+    // Pre-cargar asignaciones desde la BD (dia_libre guardado en cada persona)
+    // Solo si el usuario no ha arrastrado nada todavia en esta sesion
+    if (Object.keys(rolAssigned).length === 0) {
+        _rolPersonal.forEach(p => {
+            if (p.dia_libre) rolAssigned[p.id] = p.dia_libre;
+        });
+    }
+
     buildRolSidebar(_rolPersonal);
 
     const libresPorDia = {};

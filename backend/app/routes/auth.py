@@ -6,14 +6,16 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, field_validator
 from app.database.db import get_db
 from app.models.usuario import Usuario
+from passlib.context import CryptContext
 import hashlib
 import hmac
-import secrets
 import re
 import logging
 
 router = APIRouter(prefix="/api/auth", tags=["Auth"])
 logger = logging.getLogger("auth")
+
+_pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 MIN_PASSWORD_LENGTH = 8
 LOGIN_MAX_ATTEMPTS = 5
@@ -43,17 +45,21 @@ def _record_attempt(ip: str):
 
 
 def hash_password(password: str) -> str:
-    """Hash con SHA-256 + salt aleatorio de 32 bytes"""
-    salt = secrets.token_hex(32)
-    hashed = hashlib.sha256(f"{salt}{password}".encode()).hexdigest()
-    return f"{salt}:{hashed}"
+    """Hash con bcrypt"""
+    return _pwd_context.hash(password)
 
 
 def verify_password(password: str, stored_hash: str) -> bool:
-    """Verifica password contra el hash almacenado (timing-safe)"""
-    salt, hashed = stored_hash.split(":")
-    computed = hashlib.sha256(f"{salt}{password}".encode()).hexdigest()
-    return hmac.compare_digest(computed, hashed)
+    """Verifica password. Soporta bcrypt (nuevo) y SHA-256+salt (legado)."""
+    if stored_hash.startswith("$2b$") or stored_hash.startswith("$2a$"):
+        return _pwd_context.verify(password, stored_hash)
+    # Legado: salt:sha256hex
+    try:
+        salt, hashed = stored_hash.split(":", 1)
+        computed = hashlib.sha256(f"{salt}{password}".encode()).hexdigest()
+        return hmac.compare_digest(computed, hashed)
+    except Exception:
+        return False
 
 
 def _registrar_audit(db: Session, accion: str, entidad: str, entidad_id: int = None, detalle: str = None):
@@ -203,3 +209,77 @@ def check_auth_required(db: Session = Depends(get_db)):
     """Verifica si hay usuarios registrados (si no hay, no requiere login)"""
     total = db.query(Usuario).filter(Usuario.activo == True).count()
     return {"auth_required": total > 0, "total_usuarios": total}
+
+
+class CambiarPasswordRequest(BaseModel):
+    username: str
+    password_actual: str
+    password_nuevo: str
+
+    @field_validator("password_nuevo")
+    @classmethod
+    def validar_password_nuevo(cls, v):
+        if len(v) < MIN_PASSWORD_LENGTH:
+            raise ValueError(f"Password debe tener al menos {MIN_PASSWORD_LENGTH} caracteres")
+        if len(v) > 128:
+            raise ValueError("Password no puede exceder 128 caracteres")
+        return v
+
+
+@router.put("/cambiar-password")
+def cambiar_password(request: Request, data: CambiarPasswordRequest, db: Session = Depends(get_db)):
+    """Cambiar password de un usuario"""
+    ip = request.client.host if request.client else "unknown"
+    usuario = db.query(Usuario).filter(
+        Usuario.username == data.username,
+        Usuario.activo == True
+    ).first()
+    if not usuario or not verify_password(data.password_actual, usuario.password_hash):
+        logger.warning(f"Cambio de password fallido para '{data.username}' desde {ip}")
+        raise HTTPException(status_code=401, detail="Usuario o password actual incorrecto")
+
+    usuario.password_hash = hash_password(data.password_nuevo)
+    db.commit()
+    logger.info(f"Password cambiado para '{data.username}' desde {ip}")
+    _registrar_audit(db, "cambiar_password", "usuario", usuario.id, f"{data.username} desde {ip}")
+    return {"status": "ok", "mensaje": "Password actualizado correctamente"}
+
+
+@router.get("/usuarios")
+def listar_usuarios(db: Session = Depends(get_db)):
+    """Lista todos los usuarios del sistema"""
+    usuarios = db.query(Usuario).order_by(Usuario.fecha_creacion.desc()).all()
+    return [
+        {
+            "id": u.id,
+            "username": u.username,
+            "nombre": u.nombre,
+            "rol": u.rol,
+            "activo": u.activo,
+            "fecha_creacion": u.fecha_creacion.isoformat() if u.fecha_creacion else None,
+        }
+        for u in usuarios
+    ]
+
+
+@router.delete("/usuarios/{usuario_id}")
+def desactivar_usuario(usuario_id: int, request: Request, db: Session = Depends(get_db)):
+    """Desactiva un usuario del sistema"""
+    ip = request.client.host if request.client else "unknown"
+    usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    # Proteger: no desactivar si es el unico admin activo
+    if usuario.rol == "admin":
+        admins_activos = db.query(Usuario).filter(
+            Usuario.rol == "admin", Usuario.activo == True
+        ).count()
+        if admins_activos <= 1:
+            raise HTTPException(status_code=400, detail="No se puede desactivar el unico administrador activo")
+
+    usuario.activo = False
+    db.commit()
+    logger.info(f"Usuario desactivado: '{usuario.username}' (id={usuario_id}) desde {ip}")
+    _registrar_audit(db, "desactivar", "usuario", usuario_id, f"{usuario.username} desde {ip}")
+    return {"status": "ok", "mensaje": f"Usuario '{usuario.username}' desactivado"}

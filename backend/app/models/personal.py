@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Date
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Date, Numeric
 from datetime import datetime, timedelta
 from app.database.db import Base
 
@@ -20,6 +20,7 @@ class Personal(Base):
     duracion_contrato = Column(String(20), default="3_meses")  # 3_meses, 6_meses, 1_anio
     fecha_fin = Column(Date, nullable=True)  # Calculado automaticamente
     dia_libre = Column(String(20), default="domingo")  # lunes, martes, ..., domingo
+    sueldo = Column(Numeric(10, 2), nullable=True)  # Sueldo mensual en Bs
     activo = Column(Boolean, default=True)
     fecha_creacion = Column(DateTime, default=datetime.utcnow)
     fecha_actualizacion = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

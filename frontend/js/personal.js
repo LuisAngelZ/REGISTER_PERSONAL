@@ -207,6 +207,7 @@ async function cargarPersonal(page) {
         const pageItems = filtered.slice(start, start + ITEMS_PER_PAGE);
 
         const DURACION_LABEL = {'3_meses':'3 Meses','6_meses':'6 Meses','1_anio':'1 Ano'};
+        const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
 
         container.innerHTML = pageItems.map(p => {
             const initials = escapeHtml((p.nombre[0] || '') + (p.apellido[0] || ''));
@@ -219,8 +220,20 @@ async function cargarPersonal(page) {
             const fechaFinStr = p.fecha_fin ? new Date(p.fecha_fin + 'T00:00:00').toLocaleDateString('es-ES') : '-';
             const fechaInicioStr = p.fecha_inicio ? new Date(p.fecha_inicio + 'T00:00:00').toLocaleDateString('es-ES') : '-';
 
+            let contratoAlertHtml = '';
+            if (p.fecha_fin && p.activo) {
+                const fechaFin = new Date(p.fecha_fin + 'T00:00:00');
+                const diasRestantes = Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
+                if (diasRestantes < 0) {
+                    contratoAlertHtml = `<div class="contrato-alert vencido">&#9888; Contrato vencido hace ${Math.abs(diasRestantes)} dias</div>`;
+                } else if (diasRestantes <= 15) {
+                    contratoAlertHtml = `<div class="contrato-alert proximo">&#9201; Vence en ${diasRestantes} dia${diasRestantes !== 1 ? 's' : ''}</div>`;
+                }
+            }
+
             return `
                 <div class="person-card">
+                    ${contratoAlertHtml}
                     <div class="person-top">
                         <div class="person-avatar">${initials.toUpperCase()}</div>
                         <span class="person-status ${statusClass}">${statusText}</span>
