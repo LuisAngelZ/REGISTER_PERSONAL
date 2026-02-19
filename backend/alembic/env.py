@@ -15,6 +15,7 @@ from app.database.db import Base
 from app.models.personal import Personal
 from app.models.asistencia import Asistencia
 from app.models.usuario import Usuario
+from app.models.auditlog import AuditLog
 
 # this is the Alembic Config object
 config = context.config

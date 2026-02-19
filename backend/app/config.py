@@ -13,8 +13,8 @@ class Settings(BaseSettings):
     zkteco_timeout: int = 15
     zkteco_password: int = 0
 
-    # Database (sin default con credenciales - viene del .env)
-    database_url: str = "sqlite:///./registro_personal.db"
+    # Database - PostgreSQL, viene obligatoriamente del .env
+    database_url: str
 
     # API
     api_host: str = "0.0.0.0"
@@ -26,6 +26,6 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:8000"
 
     # Sucursal
-    sucursal_nombre: str = "Pollito Sensacion - Principal"
+    sucursal_nombre: str = "Wara Chicken - Principal"
 
 settings = Settings()

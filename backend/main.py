@@ -179,34 +179,6 @@ def info_sucursal():
     """Retorna informacion de la sucursal"""
     return {"nombre": settings.sucursal_nombre}
 
-@app.get("/api/backup")
-def backup_database():
-    """Descarga un backup de la base de datos SQLite"""
-    import shutil
-    from datetime import datetime as dt
-
-    db_path = Path(__file__).parent / "registro_personal.db"
-    if not db_path.exists():
-        return JSONResponse(status_code=404, content={"detail": "Base de datos SQLite no encontrada"})
-
-    backup_name = f"backup_{dt.now().strftime('%Y%m%d_%H%M%S')}.db"
-    backup_path = Path(__file__).parent / backup_name
-    shutil.copy2(str(db_path), str(backup_path))
-
-    from fastapi.responses import FileResponse
-    logger.info(f"Backup generado: {backup_name}")
-    response = FileResponse(
-        str(backup_path),
-        media_type="application/octet-stream",
-        filename=backup_name,
-    )
-
-    # Limpiar backup temporal despues de enviar
-    import atexit
-    atexit.register(lambda: backup_path.unlink(missing_ok=True))
-
-    return response
-
 @app.get("/api/audit-log")
 def obtener_audit_log(limit: int = 50, skip: int = 0):
     """Obtener los ultimos registros del historial de cambios"""
