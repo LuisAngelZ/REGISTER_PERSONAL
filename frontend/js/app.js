@@ -28,8 +28,17 @@ async function cargarPartials() {
     }));
 }
 
+function inicializarSelectoresFecha() {
+    const now  = new Date();
+    const mes  = now.getMonth();   // 0-based igual que los <option value>
+    const anio = now.getFullYear();
+    ['dashMes', 'rolMes'].forEach(id => { const el = document.getElementById(id); if (el) el.value = mes; });
+    ['dashAnio', 'rolAnio'].forEach(id => { const el = document.getElementById(id); if (el) el.value = anio; });
+}
+
 window.addEventListener('load', async () => {
     await cargarPartials();
+    inicializarSelectoresFecha();
     await obtenerCsrfToken();
     await verificarAuth();
 });

@@ -122,13 +122,30 @@
 
         <!-- Content -->
         <div class="content">
-            <div id="personal"       class="section active"></div>
-            <div id="dashboard"      class="section"></div>
-            <div id="registrar"      class="section"></div>
-            <div id="editar-section" class="section"></div>
-            <div id="reporte"        class="section"></div>
-            <div id="configuracion"  class="section"></div>
-            <div id="rol-libres"     class="section"></div>
+            <!-- Skeleton en personal (seccion activa al cargar) -->
+            <div id="personal" class="section active">
+                <div class="sk-grid3">
+                    <div class="skeleton sk-h80"></div>
+                    <div class="skeleton sk-h80"></div>
+                    <div class="skeleton sk-h80"></div>
+                </div>
+                <div class="skeleton sk-h44" style="margin-bottom:20px;"></div>
+                <div class="sk-cards">
+                    <div class="skeleton sk-h140"></div>
+                    <div class="skeleton sk-h140"></div>
+                    <div class="skeleton sk-h140"></div>
+                    <div class="skeleton sk-h140"></div>
+                    <div class="skeleton sk-h140"></div>
+                    <div class="skeleton sk-h140"></div>
+                </div>
+            </div>
+            <!-- Skeleton simple para las demas secciones -->
+            <div id="dashboard"      class="section"><div class="skeleton sk-h300"></div></div>
+            <div id="registrar"      class="section"><div class="skeleton sk-h300"></div></div>
+            <div id="editar-section" class="section"><div class="skeleton sk-h300"></div></div>
+            <div id="reporte"        class="section"><div class="skeleton sk-h300"></div></div>
+            <div id="configuracion"  class="section"><div class="skeleton sk-h300"></div></div>
+            <div id="rol-libres"     class="section"><div class="skeleton sk-h300"></div></div>
         </div>
     </div>
 

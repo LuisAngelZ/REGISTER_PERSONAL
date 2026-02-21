@@ -106,6 +106,13 @@ class PersonalCreate(BaseModel):
             raise ValueError(f"Dia libre debe ser uno de: {', '.join(DIAS_VALIDOS)}")
         return v
 
+    @field_validator("fecha_inicio")
+    @classmethod
+    def validar_fecha_inicio(cls, v):
+        if v is not None and v.year < 2000:
+            raise ValueError("El año de la fecha debe ser posterior al 2000")
+        return v
+
 class PersonalUpdate(BaseModel):
     nombre: Optional[str] = None
     apellido: Optional[str] = None
@@ -173,6 +180,13 @@ class PersonalUpdate(BaseModel):
     def validar_dia_libre(cls, v):
         if v is not None and v not in DIAS_VALIDOS:
             raise ValueError(f"Dia libre debe ser uno de: {', '.join(DIAS_VALIDOS)}")
+        return v
+
+    @field_validator("fecha_inicio")
+    @classmethod
+    def validar_fecha_inicio(cls, v):
+        if v is not None and v.year < 2000:
+            raise ValueError("El año de la fecha debe ser posterior al 2000")
         return v
 
 class PersonalResponse(BaseModel):
