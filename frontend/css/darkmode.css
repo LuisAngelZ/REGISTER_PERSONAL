@@ -1,0 +1,130 @@
+/* ============ DARK MODE ============ */
+[data-theme="dark"] {
+    --slate-900: #f8fafc;
+    --slate-800: #e2e8f0;
+    --slate-700: #cbd5e1;
+    --slate-600: #94a3b8;
+    --slate-500: #64748b;
+    --slate-400: #475569;
+    --slate-300: #334155;
+    --slate-200: #1e293b;
+    --slate-100: #1a2332;
+    --slate-50: #131c2a;
+    --white: #0f172a;
+    --success-bg: #052e16;
+    --danger-bg: #450a0a;
+    --warning-bg: #451a03;
+    --info-bg: #172554;
+}
+
+[data-theme="dark"] body {
+    background: #0c1220;
+}
+
+[data-theme="dark"] .login-screen {
+    background: #080e1a;
+}
+
+[data-theme="dark"] .login-card {
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .navbar {
+    background: #080e1a;
+    border-bottom: 1px solid #1e293b;
+}
+
+[data-theme="dark"] .section-nav {
+    background: #0f172a;
+    border-bottom-color: #1e293b;
+}
+
+[data-theme="dark"] .person-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .search-bar input {
+    background: #131c2a;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .form-input {
+    background: #131c2a;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .alert {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .alert-success {
+    background: #052e16;
+    color: #86efac;
+}
+
+[data-theme="dark"] .alert-error {
+    background: #450a0a;
+    color: #fca5a5;
+}
+
+[data-theme="dark"] .alert-info {
+    background: #172554;
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .reporte-table th {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .reporte-table td {
+    border-color: #1e293b;
+}
+
+[data-theme="dark"] .reporte-table tr:nth-child(even) {
+    background: #131c2a;
+}
+
+[data-theme="dark"] .reporte-table tr.dia-libre {
+    background: #0c2d48;
+}
+
+[data-theme="dark"] .reporte-table tr.dia-falta {
+    background: #2d0f0f;
+}
+
+[data-theme="dark"] .reporte-table tr:hover {
+    background: #172554;
+}
+
+[data-theme="dark"] .modal-overlay {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .modal-content {
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] .att-table th {
+    background: #1e293b;
+    border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .att-table td {
+    border-bottom-color: #1e293b;
+}
+
+[data-theme="dark"] .badge-entrada {
+    background: #052e16;
+    color: #86efac;
+}
+
+[data-theme="dark"] .badge-salida {
+    background: #450a0a;
+    color: #fca5a5;
+}
+
+[data-theme="dark"] .dark-toggle {
+    border-color: #334155;
+    color: #e2e8f0;
+}

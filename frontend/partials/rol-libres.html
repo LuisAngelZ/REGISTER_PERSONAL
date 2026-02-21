@@ -1,0 +1,39 @@
+<div class="card">
+    <div class="card-header" style="flex-wrap:wrap;gap:10px;">
+        <h3>Rol de Dias Libres</h3>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <select class="form-input" id="rolMes" style="width:auto;" onchange="generarRolLibres()">
+                <option value="0">Enero</option>
+                <option value="1">Febrero</option>
+                <option value="2">Marzo</option>
+                <option value="3">Abril</option>
+                <option value="4">Mayo</option>
+                <option value="5">Junio</option>
+                <option value="6">Julio</option>
+                <option value="7">Agosto</option>
+                <option value="8">Septiembre</option>
+                <option value="9">Octubre</option>
+                <option value="10">Noviembre</option>
+                <option value="11">Diciembre</option>
+            </select>
+            <input type="number" class="form-input" id="rolAnio" style="width:90px;" value="2026" onchange="generarRolLibres()">
+            <button class="btn btn-sm btn-success" onclick="guardarRolLibres()" style="white-space:nowrap;">Guardar Dias Libres</button>
+            <button class="btn btn-sm btn-primary" onclick="previsualizarRol()" style="white-space:nowrap;">Vista Previa / Imprimir</button>
+        </div>
+    </div>
+    <div class="card-body" style="overflow-x:auto;">
+        <div class="rol-layout">
+            <!-- Left sidebar: draggable personnel -->
+            <div class="rol-sidebar">
+                <div class="rol-sidebar-header">Personal</div>
+                <div class="rol-sidebar-list" id="rolSidebarList">
+                    <p style="padding:12px;color:var(--slate-400);font-size:0.8rem;">Cargando...</p>
+                </div>
+            </div>
+            <!-- Right: calendar -->
+            <div class="rol-calendar-area" id="rolCalendarContainer">
+                <div class="empty-state"><p>Selecciona mes y ano para generar el rol</p></div>
+            </div>
+        </div>
+    </div>
+</div>

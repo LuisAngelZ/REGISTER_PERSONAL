@@ -1,0 +1,109 @@
+/* ============ REPORTE ASISTENCIA ============ */
+.reporte-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.reporte-table th {
+    background: var(--slate-800);
+    color: white;
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align: center;
+    border: 1px solid var(--slate-600);
+}
+
+.reporte-table td {
+    padding: 6px 8px;
+    text-align: center;
+    border: 1px solid var(--slate-200);
+    font-size: 0.82rem;
+}
+
+.reporte-table tr:nth-child(even) {
+    background: var(--slate-50);
+}
+
+.reporte-table tr.dia-libre {
+    background: #e0f2fe;
+}
+
+.reporte-table tr.dia-falta {
+    background: #fef2f2;
+}
+
+.reporte-table tr:hover {
+    background: #f0f9ff;
+}
+
+.reporte-table .cell-editable {
+    cursor: pointer;
+    position: relative;
+}
+
+.reporte-table .cell-editable:hover {
+    background: #dbeafe;
+}
+
+.reporte-table .cell-editable input {
+    width: 70px;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 0.82rem;
+    text-align: center;
+    outline: none;
+}
+
+.reporte-table .retraso-val {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.reporte-table .extra-val {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.reporte-table .btn-edit-cell {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    color: var(--slate-400);
+}
+
+.reporte-table .btn-edit-cell:hover {
+    background: var(--slate-200);
+    color: var(--accent);
+}
+
+.reporte-summary {
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.summary-label {
+    font-size: 0.82rem;
+    color: var(--slate-600);
+}
+
+.summary-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--slate-800);
+}

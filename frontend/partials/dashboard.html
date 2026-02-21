@@ -1,0 +1,44 @@
+<div class="card">
+    <div class="card-header" style="flex-wrap:wrap;gap:10px;">
+        <h3>Dashboard de Asistencia</h3>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <select class="form-input" id="dashMes" style="width:auto;" onchange="cargarDashboard()">
+                <option value="0">Enero</option><option value="1">Febrero</option>
+                <option value="2">Marzo</option><option value="3">Abril</option>
+                <option value="4">Mayo</option><option value="5">Junio</option>
+                <option value="6">Julio</option><option value="7">Agosto</option>
+                <option value="8">Septiembre</option><option value="9">Octubre</option>
+                <option value="10">Noviembre</option><option value="11">Diciembre</option>
+            </select>
+            <input type="number" class="form-input" id="dashAnio" style="width:90px;" value="2026" onchange="cargarDashboard()">
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="stats-grid" id="dashStats">
+            <div class="stat-card"><div class="stat-label">Personal Activo</div><div class="stat-value" id="dashTotal">-</div></div>
+            <div class="stat-card"><div class="stat-label">Total Faltas</div><div class="stat-value" id="dashFaltas" style="color:var(--danger);">-</div></div>
+            <div class="stat-card"><div class="stat-label">Min. Retraso</div><div class="stat-value" id="dashRetrasos" style="color:var(--warning, #f59e0b);">-</div></div>
+            <div class="stat-card"><div class="stat-label">Min. Extra</div><div class="stat-value" id="dashExtras" style="color:var(--success);">-</div></div>
+        </div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;">
+            <div class="card" style="flex:1;min-width:280px;">
+                <div class="card-header"><h3>Por Puesto</h3></div>
+                <div class="card-body"><canvas id="chartPuestos" height="220"></canvas></div>
+            </div>
+            <div class="card" style="flex:1;min-width:280px;">
+                <div class="card-header"><h3>Top 5 - Mas Retrasos</h3></div>
+                <div class="card-body">
+                    <canvas id="chartRetrasos" height="220"></canvas>
+                    <p id="dashTopRetrasosEmpty" style="display:none;color:var(--slate-400);font-size:0.85rem;">Sin retrasos este mes</p>
+                </div>
+            </div>
+            <div class="card" style="flex:1;min-width:280px;">
+                <div class="card-header"><h3>Top 5 - Mas Faltas</h3></div>
+                <div class="card-body">
+                    <canvas id="chartFaltas" height="220"></canvas>
+                    <p id="dashTopFaltasEmpty" style="display:none;color:var(--slate-400);font-size:0.85rem;">Sin faltas este mes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

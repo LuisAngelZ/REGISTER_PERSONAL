@@ -1,0 +1,178 @@
+/* ============ PERSONNEL GRID ============ */
+.personnel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.person-card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s;
+}
+
+.person-card:hover {
+    border-color: var(--slate-300);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.contrato-alert {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.contrato-alert.vencido {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid #fca5a5;
+}
+
+.contrato-alert.proximo {
+    background: var(--warning-bg);
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.person-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.person-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--slate-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--slate-600);
+}
+
+.person-status {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.person-status.active {
+    background: var(--success-bg);
+    color: #16a34a;
+}
+
+.person-status.inactive {
+    background: var(--danger-bg);
+    color: #dc2626;
+}
+
+.person-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--slate-900);
+    margin-bottom: 4px;
+}
+
+.person-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 14px;
+}
+
+.person-meta span {
+    font-size: 0.8rem;
+    color: var(--slate-500);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.person-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.tag {
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    background: var(--slate-100);
+    color: var(--slate-600);
+}
+
+.tag.uid {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+.person-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--slate-100);
+}
+
+.person-actions .btn-sm {
+    flex: 1;
+}
+
+/* ============ ATTENDANCE TABLE (modal) ============ */
+.att-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.att-table th {
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--slate-500);
+    padding: 10px 12px;
+    background: var(--slate-50);
+    border-bottom: 1px solid var(--slate-200);
+}
+
+.att-table td {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--slate-100);
+    color: var(--slate-700);
+}
+
+.badge-entrada {
+    background: var(--success-bg);
+    color: #16a34a;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-salida {
+    background: var(--danger-bg);
+    color: #dc2626;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}

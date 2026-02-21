@@ -1,0 +1,111 @@
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+    .config-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .personnel-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar {
+        padding: 0 16px;
+    }
+
+    .navbar-brand span {
+        display: none;
+    }
+
+    .device-pill span.pill-text {
+        display: none;
+    }
+
+    .section-nav {
+        padding: 0 12px;
+    }
+
+    .nav-item {
+        padding: 12px 14px;
+        font-size: 0.8rem;
+    }
+
+    .content {
+        padding: 16px;
+    }
+
+    .login-card {
+        padding: 32px 24px;
+    }
+
+    .alert-container {
+        right: 12px;
+        left: 12px;
+        max-width: none;
+    }
+
+    .person-actions {
+        flex-wrap: wrap;
+    }
+
+    .config-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .rol-layout {
+        flex-direction: column;
+    }
+
+    .rol-sidebar {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .rol-sidebar-list {
+        max-height: 150px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .rol-drag-item {
+        margin-bottom: 0;
+        flex: 0 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        height: 52px;
+    }
+
+    .navbar-brand {
+        font-size: 0.85rem;
+    }
+
+    .section-nav {
+        gap: 0;
+    }
+
+    .nav-item {
+        padding: 10px 12px;
+        font-size: 0.75rem;
+    }
+
+    .person-card {
+        padding: 16px;
+    }
+}

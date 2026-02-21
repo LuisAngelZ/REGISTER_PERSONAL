@@ -1,0 +1,30 @@
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total Personal</div>
+        <div class="stat-value" id="totalPersonal">-</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Activos</div>
+        <div class="stat-value" id="activosPersonal">-</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Inactivos</div>
+        <div class="stat-value" id="inactivosPersonal">-</div>
+    </div>
+</div>
+
+<div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;">
+    <div class="search-bar" style="flex:1;margin-bottom:0;">
+        <input type="text" id="filtroNombre" placeholder="Buscar por CI o nombre..." oninput="cargarPersonal(1)">
+    </div>
+    <button class="btn btn-sm btn-ghost" onclick="exportarListaPersonal('csv')" title="Exportar CSV">CSV</button>
+    <button class="btn btn-sm btn-ghost" onclick="exportarListaPersonal('excel')" title="Exportar Excel">Excel</button>
+</div>
+
+<div id="personnelContainer" class="personnel-grid">
+    <div class="empty-state" style="grid-column:1/-1;">
+        <div class="spinner"></div>
+        <p style="margin-top:12px;">Cargando personal...</p>
+    </div>
+</div>
+<div id="paginationControls" class="pagination"></div>

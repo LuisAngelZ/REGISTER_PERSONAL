@@ -1,0 +1,77 @@
+<div class="card">
+    <div class="card-header">
+        <h3>Nuevo Personal</h3>
+    </div>
+    <div class="card-body">
+        <form id="formCrear" onsubmit="crearPersonal(event)">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" class="form-input" id="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>Apellido</label>
+                    <input type="text" class="form-input" id="apellido" required>
+                </div>
+                <div class="form-group">
+                    <label>Carnet de Identidad (CI)</label>
+                    <input type="text" class="form-input" id="documento" required placeholder="Ej: 12345678">
+                </div>
+                <div class="form-group">
+                    <label>Puesto de Trabajo</label>
+                    <select class="form-input" id="puesto">
+                        <option value="cajero">Cajero</option>
+                        <option value="mesero">Mesero</option>
+                        <option value="cocinero">Cocinero</option>
+                        <option value="lavaplatos">Lavaplatos</option>
+                        <option value="servidora">Servidora</option>
+                        <option value="guardia">Guardia</option>
+                        <option value="despacho">Despacho</option>
+                        <option value="otros">Otros</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Turno</label>
+                    <select class="form-input" id="turno" onchange="cambiarTurno(this.value, 'horaEntrada', 'horaSalida')">
+                        <option value="mañana">Manana (08:00 - 17:00)</option>
+                        <option value="tarde">Tarde (13:00 - 22:00)</option>
+                        <option value="especial">Especial (12:00 - 21:00)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dia Libre</label>
+                    <select class="form-input" id="diaLibre" disabled style="background:var(--slate-100);color:var(--slate-500);">
+                        <option value="domingo" selected>Se asigna en Rol de Libres</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Hora Entrada</label>
+                    <input type="time" class="form-input" id="horaEntrada" value="08:00">
+                </div>
+                <div class="form-group">
+                    <label>Hora Salida</label>
+                    <input type="time" class="form-input" id="horaSalida" value="17:00">
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Inicio</label>
+                    <input type="date" class="form-input" id="fechaInicio" required>
+                </div>
+                <div class="form-group">
+                    <label>Duracion del Contrato</label>
+                    <select class="form-input" id="duracionContrato" onchange="calcularFechaFin('fechaInicio','duracionContrato','fechaFin')">
+                        <option value="3_meses">3 Meses (85 dias)</option>
+                        <option value="6_meses">6 Meses (180 dias)</option>
+                        <option value="1_anio">1 Ano (365 dias)</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>Ultimo Dia de Trabajo (calculado)</label>
+                    <input type="date" class="form-input" id="fechaFin" readonly style="background:var(--slate-100);color:var(--slate-500);">
+                </div>
+            </div>
+            <div class="form-actions" style="margin-top:20px;">
+                <button type="submit" class="btn btn-primary">Guardar Personal</button>
+            </div>
+        </form>
+    </div>
+</div>

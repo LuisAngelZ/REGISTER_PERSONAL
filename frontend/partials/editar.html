@@ -1,0 +1,82 @@
+<div class="card">
+    <div class="card-header">
+        <h3>Editar Personal</h3>
+    </div>
+    <div class="card-body">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>ID del Personal</label>
+                <input type="number" class="form-input" id="buscarId" placeholder="Ingresa el ID">
+            </div>
+            <div class="form-group" style="display:flex;align-items:flex-end;">
+                <button class="btn btn-primary" onclick="buscarPersonal()" style="margin:0;">Buscar</button>
+            </div>
+        </div>
+
+        <form id="formEditar" onsubmit="actualizarPersonal(event)" style="display:none; margin-top:24px; padding-top:24px; border-top:1px solid var(--slate-200);">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" class="form-input" id="editNombre">
+                </div>
+                <div class="form-group">
+                    <label>Apellido</label>
+                    <input type="text" class="form-input" id="editApellido">
+                </div>
+                <div class="form-group">
+                    <label>Puesto de Trabajo</label>
+                    <select class="form-input" id="editPuesto">
+                        <option value="cajero">Cajero</option>
+                        <option value="mesero">Mesero</option>
+                        <option value="cocinero">Cocinero</option>
+                        <option value="lavaplatos">Lavaplatos</option>
+                        <option value="servidora">Servidora</option>
+                        <option value="guardia">Guardia</option>
+                        <option value="despacho">Despacho</option>
+                        <option value="otros">Otros</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Turno</label>
+                    <select class="form-input" id="editTurno" onchange="cambiarTurno(this.value, 'editHoraEntrada', 'editHoraSalida')">
+                        <option value="mañana">Manana (08:00 - 17:00)</option>
+                        <option value="tarde">Tarde (13:00 - 22:00)</option>
+                        <option value="especial">Especial (12:00 - 21:00)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dia Libre</label>
+                    <input type="text" class="form-input" id="editDiaLibre" readonly style="background:var(--slate-100);color:var(--slate-500);" value="Se asigna en Rol de Libres">
+                </div>
+                <div class="form-group">
+                    <label>Hora Entrada</label>
+                    <input type="time" class="form-input" id="editHoraEntrada" value="08:00">
+                </div>
+                <div class="form-group">
+                    <label>Hora Salida</label>
+                    <input type="time" class="form-input" id="editHoraSalida" value="17:00">
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Inicio</label>
+                    <input type="date" class="form-input" id="editFechaInicio">
+                </div>
+                <div class="form-group">
+                    <label>Duracion del Contrato</label>
+                    <select class="form-input" id="editDuracionContrato" onchange="calcularFechaFin('editFechaInicio','editDuracionContrato','editFechaFin')">
+                        <option value="3_meses">3 Meses (85 dias)</option>
+                        <option value="6_meses">6 Meses (180 dias)</option>
+                        <option value="1_anio">1 Ano (365 dias)</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>Ultimo Dia de Trabajo (calculado)</label>
+                    <input type="date" class="form-input" id="editFechaFin" readonly style="background:var(--slate-100);color:var(--slate-500);">
+                </div>
+            </div>
+            <div class="form-actions" style="margin-top:20px;">
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <button type="button" class="btn btn-ghost" onclick="cancelarEdicion()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>

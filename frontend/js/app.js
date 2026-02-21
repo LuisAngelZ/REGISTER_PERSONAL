@@ -2,7 +2,26 @@
 // Módulos cargados antes de este archivo:
 // helpers.js, auth.js, device.js, personal.js, dashboard.js, reporte.js, rol.js
 
+async function cargarPartials() {
+    const partials = [
+        { id: 'personal',       file: 'personal' },
+        { id: 'dashboard',      file: 'dashboard' },
+        { id: 'registrar',      file: 'registrar' },
+        { id: 'editar-section', file: 'editar' },
+        { id: 'reporte',        file: 'reporte' },
+        { id: 'configuracion',  file: 'configuracion' },
+        { id: 'rol-libres',     file: 'rol-libres' },
+    ];
+    await Promise.all(partials.map(async ({ id, file }) => {
+        const resp = await fetch(`/static/partials/${file}.html`);
+        const html = await resp.text();
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+    }));
+}
+
 window.addEventListener('load', async () => {
+    await cargarPartials();
     await obtenerCsrfToken();
     await verificarAuth();
 });
