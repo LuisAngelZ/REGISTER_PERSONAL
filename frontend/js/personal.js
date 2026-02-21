@@ -326,9 +326,12 @@ async function cargarEstadisticas() {
         const response = await apiFetch(`${API_URL}/api/personal/stats/total`);
         if (!response.ok) throw new Error('Error');
         const stats = await response.json();
-        document.getElementById('totalPersonal').textContent = stats.total;
-        document.getElementById('activosPersonal').textContent = stats.activos;
-        document.getElementById('inactivosPersonal').textContent = stats.inactivos;
+        const totalEl    = document.getElementById('totalPersonal');
+        const activosEl  = document.getElementById('activosPersonal');
+        const inactivosEl= document.getElementById('inactivosPersonal');
+        if (totalEl)     totalEl.textContent     = stats.total;
+        if (activosEl)   activosEl.textContent   = stats.activos;
+        if (inactivosEl) inactivosEl.textContent = stats.inactivos;
     } catch (error) {
         console.error(error);
     }

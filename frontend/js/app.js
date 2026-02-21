@@ -13,10 +13,18 @@ async function cargarPartials() {
         { id: 'rol-libres',     file: 'rol-libres' },
     ];
     await Promise.all(partials.map(async ({ id, file }) => {
-        const resp = await fetch(`/static/partials/${file}.html`);
-        const html = await resp.text();
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = html;
+        try {
+            const resp = await fetch(`/static/partials/${file}.html`);
+            if (!resp.ok) {
+                console.error(`[partials] ERROR ${resp.status} al cargar ${file}.html`);
+                return;
+            }
+            const html = await resp.text();
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = html;
+        } catch (e) {
+            console.error(`[partials] Fallo al cargar ${file}.html:`, e);
+        }
     }));
 }
 

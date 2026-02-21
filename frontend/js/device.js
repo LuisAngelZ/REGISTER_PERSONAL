@@ -129,12 +129,16 @@ async function cargarConfigGuardada() {
         const response = await apiFetch(`${API_URL}/api/zkteco/config`);
         if (response.ok) {
             const config = await response.json();
-            document.getElementById('ipZkteco').value = config.ip || '';
-            document.getElementById('puertoZkteco').value = config.puerto || 4370;
-            document.getElementById('passwordZkteco').value = config.password || 0;
-            if (config.guardado) {
-                document.getElementById('configInfo').innerHTML =
-                    `<strong>Dispositivo configurado</strong> &mdash; ${escapeHtml(config.ip)}:${escapeHtml(config.puerto)}`;
+            const ipEl     = document.getElementById('ipZkteco');
+            const puertoEl = document.getElementById('puertoZkteco');
+            const passEl   = document.getElementById('passwordZkteco');
+            const infoEl   = document.getElementById('configInfo');
+            if (ipEl)     ipEl.value     = config.ip || '';
+            if (puertoEl) puertoEl.value = config.puerto || 4370;
+            if (passEl)   passEl.value   = config.password || 0;
+            if (infoEl && config.guardado) {
+                infoEl.innerHTML =
+                    `<strong>Dispositivo configurado</strong> &mdash; ${escapeHtml(config.ip)}:${escapeHtml(String(config.puerto))}`;
             }
         }
     } catch (error) {

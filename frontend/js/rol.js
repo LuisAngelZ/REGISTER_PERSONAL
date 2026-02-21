@@ -73,8 +73,11 @@ function buildRolSidebar(personal) {
 }
 
 async function generarRolLibres() {
-    _rolMes = parseInt(document.getElementById('rolMes').value);
-    _rolAnio = parseInt(document.getElementById('rolAnio').value);
+    const mesEl  = document.getElementById('rolMes');
+    const anioEl = document.getElementById('rolAnio');
+    if (!mesEl || !anioEl) return;
+    _rolMes  = parseInt(mesEl.value);
+    _rolAnio = parseInt(anioEl.value);
     const container = document.getElementById('rolCalendarContainer');
 
     try {

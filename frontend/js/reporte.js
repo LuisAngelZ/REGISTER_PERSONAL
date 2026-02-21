@@ -3,7 +3,10 @@ let _reporteData = null;
 const DIAS_LABEL_CORTO = {lunes:'Lun',martes:'Mar',miercoles:'Mie',jueves:'Jue',viernes:'Vie',sabado:'Sab',domingo:'Dom'};
 
 async function cargarReporteInit() {
-    const select = document.getElementById('reportePersonal');
+    const select  = document.getElementById('reportePersonal');
+    const mesEl   = document.getElementById('reporteMes');
+    const anioEl  = document.getElementById('reporteAnio');
+    if (!select || !mesEl || !anioEl) return;
     try {
         const resp = await apiFetch(`${API_URL}/api/personal/?activos=true&limit=200`);
         if (resp.ok) {
@@ -16,8 +19,8 @@ async function cargarReporteInit() {
     } catch(e) { console.error(e); }
 
     const now = new Date();
-    document.getElementById('reporteMes').value = now.getMonth();
-    document.getElementById('reporteAnio').value = now.getFullYear();
+    mesEl.value  = now.getMonth();
+    anioEl.value = now.getFullYear();
 }
 
 async function cargarReporte() {

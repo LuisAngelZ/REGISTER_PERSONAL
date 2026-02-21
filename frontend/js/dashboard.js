@@ -9,8 +9,11 @@ const PUESTOS_COLORES = {
 };
 
 async function cargarDashboard() {
-    const mes = parseInt(document.getElementById('dashMes').value) + 1;
-    const anio = parseInt(document.getElementById('dashAnio').value);
+    const mesEl  = document.getElementById('dashMes');
+    const anioEl = document.getElementById('dashAnio');
+    if (!mesEl || !anioEl) return;
+    const mes  = parseInt(mesEl.value) + 1;
+    const anio = parseInt(anioEl.value);
 
     try {
         const resp = await apiFetch(`${API_URL}/api/personal/stats/dashboard?mes=${mes}&anio=${anio}`);
