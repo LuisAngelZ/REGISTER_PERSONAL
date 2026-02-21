@@ -291,16 +291,16 @@ function generarHtmlPrevistaRol() {
             <div style="width:55px;height:45px;border:1px dashed #aaa;display:inline-flex;align-items:center;justify-content:center;font-size:6pt;color:#aaa;">LOGO</div>
         </div>
     </div>
-    <table style="width:100%;border-collapse:collapse;table-layout:fixed;${pca}">
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
         <thead>
             <tr>
-                <th style="${thBase}background:#d4c5a0;">LUNES</th>
-                <th style="${thBase}background:#d4c5a0;">MARTES</th>
-                <th style="${thBase}background:#d4c5a0;">MIERCOLES</th>
-                <th style="${thBase}background:#d4c5a0;">JUEVES</th>
-                <th style="${thBase}background:#d4c5a0;">VIERNES</th>
-                <th style="${thBase}background:#b8a878;">SABADO</th>
-                <th style="${thBase}background:#b8a878;">DOMINGO</th>
+                <th class="th-wd" style="${thBase}background:#d4c5a0;">LUNES</th>
+                <th class="th-wd" style="${thBase}background:#d4c5a0;">MARTES</th>
+                <th class="th-wd" style="${thBase}background:#d4c5a0;">MIERCOLES</th>
+                <th class="th-wd" style="${thBase}background:#d4c5a0;">JUEVES</th>
+                <th class="th-wd" style="${thBase}background:#d4c5a0;">VIERNES</th>
+                <th class="th-we" style="${thBase}background:#b8a878;">SABADO</th>
+                <th class="th-we" style="${thBase}background:#b8a878;">DOMINGO</th>
             </tr>
         </thead>
         <tbody>`;
@@ -311,18 +311,19 @@ function generarHtmlPrevistaRol() {
         for (let d = 0; d < 7; d++) {
             const cellIndex = w * 7 + d;
             if (cellIndex < startDow || dayCount > totalDays) {
-                html += `<td style="border:1px solid #bbb;background:#f0f0f0;${pca}"></td>`;
+                html += `<td class="td-empty" style="border:1px solid #bbb;background:#f0f0f0;"></td>`;
             } else {
                 const dowName = COL_TO_DIA[d];
                 const people  = (libresPorDia[dowName] || []).slice(0, MAX_POR_DIA);
                 const isWeekend = d >= 5;
-                const bg = isWeekend ? '#fdf9e3' : '#ffffff';
+                const tdClass = isWeekend ? 'td-we' : 'td-wd';
+                const bg      = isWeekend ? '#fdf9e3' : '#ffffff';
 
                 const namesHtml = people.map(p =>
                     `<div style="border-bottom:1px solid #e0e0e0;padding:2px 4px;font-size:var(--rol-font-size,9pt);font-weight:700;text-align:center;text-transform:uppercase;font-family:Arial,sans-serif;overflow:hidden;">${escapeHtml(p.nombre)} ${escapeHtml(p.apellido)}</div>`
                 ).join('');
 
-                html += `<td style="border:1px solid #999;vertical-align:top;background:${bg};overflow:hidden;${pca}">
+                html += `<td class="${tdClass}" style="border:1px solid #999;vertical-align:top;background:${bg};overflow:hidden;">
                     <div style="font-size:calc(var(--rol-font-size,9pt) - 1pt);font-weight:700;border-bottom:1px solid #ccc;padding:1px 4px;color:#555;text-align:right;font-family:Arial,sans-serif;">${dayCount}</div>
                     ${namesHtml}
                 </td>`;
@@ -401,6 +402,28 @@ function imprimirRol() {
     printDiv.innerHTML = printHtml;
     document.body.appendChild(printDiv);
 
+    // Inyectar <style> en <head> — UNICA forma confiable de forzar colores
+    // sin que Chrome los ignore cuando "Graficos de fondo" esta desactivado
+    const styleId = 'rolPrintColorStyle';
+    let styleEl = document.getElementById(styleId);
+    if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = styleId;
+        document.head.appendChild(styleEl);
+    }
+    styleEl.textContent = `
+        #rolPrintArea, #rolPrintArea * {
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        #rolPrintArea th.th-wd { background-color: #d4c5a0 !important; }
+        #rolPrintArea th.th-we { background-color: #b8a878 !important; }
+        #rolPrintArea td.td-we { background-color: #fdf9e3 !important; }
+        #rolPrintArea td.td-empty { background-color: #f0f0f0 !important; }
+        #rolPrintArea .pv-row    { height: var(--rol-row-height, 35mm) !important; }
+    `;
+
     cerrarPreviewRol();
 
     setTimeout(() => {
@@ -408,6 +431,8 @@ function imprimirRol() {
         setTimeout(() => {
             const pd = document.getElementById('rolPrintArea');
             if (pd) pd.remove();
+            const se = document.getElementById(styleId);
+            if (se) se.remove();
         }, 1500);
     }, 200);
 }
