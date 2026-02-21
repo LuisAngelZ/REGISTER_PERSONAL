@@ -637,15 +637,15 @@
                 <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
                     <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;white-space:nowrap;">
                         Alto de filas:
-                        <input type="range" id="rolRowHeight" min="28" max="120" value="55"
+                        <input type="range" id="rolRowHeight" min="28" max="160" value="120"
                                oninput="ajustarAltoFila(this.value)" style="width:100px;">
-                        <span id="rolRowHeightVal" style="min-width:28px;">55</span>px
+                        <span id="rolRowHeightVal" style="min-width:28px;">120</span>px
                     </label>
                     <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;white-space:nowrap;">
                         Fuente:
-                        <input type="range" id="rolFontSize" min="6" max="13" value="9"
+                        <input type="range" id="rolFontSize" min="6" max="16" value="11"
                                oninput="ajustarFuenteRol(this.value)" style="width:80px;">
-                        <span id="rolFontSizeVal" style="min-width:20px;">9</span>pt
+                        <span id="rolFontSizeVal" style="min-width:20px;">11</span>pt
                     </label>
                     <button class="btn btn-sm btn-primary" onclick="imprimirRol()">Imprimir</button>
                     <button class="btn btn-sm btn-ghost" onclick="cerrarPreviewRol()">Cerrar</button>
