@@ -277,7 +277,8 @@ function generarHtmlPrevistaRol() {
     startDow = (startDow === 0) ? 6 : startDow - 1;
     const weeks = Math.ceil((totalDays + startDow) / 7);
 
-    const thBase = 'border:1.5px solid #555;padding:4px 2px;font-weight:700;text-align:center;font-family:Arial,sans-serif;font-size:var(--rol-font-size,9pt);';
+    const pca = '-webkit-print-color-adjust:exact;print-color-adjust:exact;';
+    const thBase = `border:1.5px solid #555;padding:4px 2px;font-weight:700;text-align:center;font-family:Arial,sans-serif;font-size:var(--rol-font-size,9pt);${pca}`;
 
     let html = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3mm;">
@@ -290,7 +291,7 @@ function generarHtmlPrevistaRol() {
             <div style="width:55px;height:45px;border:1px dashed #aaa;display:inline-flex;align-items:center;justify-content:center;font-size:6pt;color:#aaa;">LOGO</div>
         </div>
     </div>
-    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;${pca}">
         <thead>
             <tr>
                 <th style="${thBase}background:#d4c5a0;">LUNES</th>
@@ -310,18 +311,18 @@ function generarHtmlPrevistaRol() {
         for (let d = 0; d < 7; d++) {
             const cellIndex = w * 7 + d;
             if (cellIndex < startDow || dayCount > totalDays) {
-                html += `<td style="border:1px solid #bbb;background:#f5f5f5;"></td>`;
+                html += `<td style="border:1px solid #bbb;background:#f0f0f0;${pca}"></td>`;
             } else {
                 const dowName = COL_TO_DIA[d];
                 const people  = (libresPorDia[dowName] || []).slice(0, MAX_POR_DIA);
                 const isWeekend = d >= 5;
-                const bg = isWeekend ? '#fffef0' : 'white';
+                const bg = isWeekend ? '#fdf9e3' : '#ffffff';
 
                 const namesHtml = people.map(p =>
                     `<div style="border-bottom:1px solid #e0e0e0;padding:2px 4px;font-size:var(--rol-font-size,9pt);font-weight:700;text-align:center;text-transform:uppercase;font-family:Arial,sans-serif;overflow:hidden;">${escapeHtml(p.nombre)} ${escapeHtml(p.apellido)}</div>`
                 ).join('');
 
-                html += `<td style="border:1px solid #999;vertical-align:top;background:${bg};overflow:hidden;">
+                html += `<td style="border:1px solid #999;vertical-align:top;background:${bg};overflow:hidden;${pca}">
                     <div style="font-size:calc(var(--rol-font-size,9pt) - 1pt);font-weight:700;border-bottom:1px solid #ccc;padding:1px 4px;color:#555;text-align:right;font-family:Arial,sans-serif;">${dayCount}</div>
                     ${namesHtml}
                 </td>`;
