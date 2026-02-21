@@ -237,15 +237,19 @@ function quitarDelRol(personalId) {
     generarRolLibres();
 }
 
-async function descargarRolPDF() {
-    const updates = Object.entries(rolAssigned).map(([pid, dia]) => {
-        return apiFetch(`${API_URL}/api/personal/${pid}`, {
+// ========== GUARDAR SOLO ==========
+async function guardarRolLibres() {
+    if (Object.keys(rolAssigned).length === 0) {
+        mostrarAlerta('No hay dias libres asignados para guardar', 'warning');
+        return;
+    }
+    const updates = Object.entries(rolAssigned).map(([pid, dia]) =>
+        apiFetch(`${API_URL}/api/personal/${pid}`, {
             method: 'PUT',
-            headers: apiHeaders(),
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ dia_libre: dia })
-        });
-    });
-
+        })
+    );
     try {
         await Promise.all(updates);
         _rolSaved = true;
@@ -253,8 +257,156 @@ async function descargarRolPDF() {
     } catch(e) {
         mostrarAlerta('Error al guardar algunos dias libres', 'error');
     }
+}
+
+// ========== GENERAR HTML LIMPIO PARA PREVIEW E IMPRESION ==========
+function generarHtmlPrevistaRol() {
+    const tituloGuardado = localStorage.getItem('rolTitulo') || 'ROL DE LIBRES "POLLITO SENSACION"';
+
+    const libresPorDia = {};
+    for (const [pid, dia] of Object.entries(rolAssigned)) {
+        if (!libresPorDia[dia]) libresPorDia[dia] = [];
+        const person = _rolPersonal.find(p => p.id === parseInt(pid));
+        if (person) libresPorDia[dia].push(person);
+    }
+
+    const firstDay = new Date(_rolAnio, _rolMes, 1);
+    const lastDay  = new Date(_rolAnio, _rolMes + 1, 0);
+    const totalDays = lastDay.getDate();
+    let startDow = firstDay.getDay();
+    startDow = (startDow === 0) ? 6 : startDow - 1;
+    const weeks = Math.ceil((totalDays + startDow) / 7);
+
+    const thBase = 'border:1.5px solid #555;padding:4px 2px;font-weight:700;text-align:center;font-family:Arial,sans-serif;font-size:var(--rol-font-size,9pt);';
+
+    let html = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3mm;">
+        <div style="flex:1;"></div>
+        <div style="text-align:center;flex:3;">
+            <div style="font-size:var(--rol-font-titulo,14pt);font-weight:bold;letter-spacing:1px;text-transform:uppercase;font-family:Arial,sans-serif;">${escapeHtml(tituloGuardado)}</div>
+            <div style="font-size:var(--rol-font-subtitulo,11pt);font-weight:600;margin-top:1mm;letter-spacing:2px;font-family:Arial,sans-serif;">${MESES_NOMBRE[_rolMes]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${_rolAnio}</div>
+        </div>
+        <div style="flex:1;text-align:right;padding-right:2mm;">
+            <div style="width:55px;height:45px;border:1px dashed #aaa;display:inline-flex;align-items:center;justify-content:center;font-size:6pt;color:#aaa;">LOGO</div>
+        </div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+        <thead>
+            <tr>
+                <th style="${thBase}background:#d4c5a0;">LUNES</th>
+                <th style="${thBase}background:#d4c5a0;">MARTES</th>
+                <th style="${thBase}background:#d4c5a0;">MIERCOLES</th>
+                <th style="${thBase}background:#d4c5a0;">JUEVES</th>
+                <th style="${thBase}background:#d4c5a0;">VIERNES</th>
+                <th style="${thBase}background:#b8a878;">SABADO</th>
+                <th style="${thBase}background:#b8a878;">DOMINGO</th>
+            </tr>
+        </thead>
+        <tbody>`;
+
+    let dayCount = 1;
+    for (let w = 0; w < weeks; w++) {
+        html += `<tr class="pv-row" style="height:var(--rol-row-height,55px);">`;
+        for (let d = 0; d < 7; d++) {
+            const cellIndex = w * 7 + d;
+            if (cellIndex < startDow || dayCount > totalDays) {
+                html += `<td style="border:1px solid #bbb;background:#f5f5f5;"></td>`;
+            } else {
+                const dowName = COL_TO_DIA[d];
+                const people  = (libresPorDia[dowName] || []).slice(0, MAX_POR_DIA);
+                const isWeekend = d >= 5;
+                const bg = isWeekend ? '#fffef0' : 'white';
+
+                const namesHtml = people.map(p =>
+                    `<div style="border-bottom:1px solid #e0e0e0;padding:2px 4px;font-size:var(--rol-font-size,9pt);font-weight:700;text-align:center;text-transform:uppercase;font-family:Arial,sans-serif;overflow:hidden;">${escapeHtml(p.nombre)} ${escapeHtml(p.apellido)}</div>`
+                ).join('');
+
+                html += `<td style="border:1px solid #999;vertical-align:top;background:${bg};overflow:hidden;">
+                    <div style="font-size:calc(var(--rol-font-size,9pt) - 1pt);font-weight:700;border-bottom:1px solid #ccc;padding:1px 4px;color:#555;text-align:right;font-family:Arial,sans-serif;">${dayCount}</div>
+                    ${namesHtml}
+                </td>`;
+                dayCount++;
+            }
+        }
+        html += `</tr>`;
+    }
+    html += `</tbody></table>`;
+    return { html, weeks };
+}
+
+// ========== VISTA PREVIA ==========
+function previsualizarRol() {
+    if (!_rolPersonal.length) {
+        mostrarAlerta('Genera el rol primero seleccionando mes y ano', 'warning');
+        return;
+    }
+    const { html } = generarHtmlPrevistaRol();
+    const body = document.getElementById('rolPreviewBody');
+
+    const sheet = document.createElement('div');
+    sheet.id = 'rolPreviewSheet';
+    sheet.style.cssText = 'background:white;width:267mm;min-height:185mm;margin:0 auto;padding:5mm 6mm;box-sizing:border-box;box-shadow:0 3px 16px rgba(0,0,0,0.45);font-family:Arial,Helvetica,sans-serif;';
+    sheet.innerHTML = html;
+
+    body.innerHTML = '';
+    body.appendChild(sheet);
+
+    ajustarAltoFila(document.getElementById('rolRowHeight').value);
+    ajustarFuenteRol(document.getElementById('rolFontSize').value);
+
+    document.getElementById('rolPreviewModal').style.display = 'flex';
+}
+
+function cerrarPreviewRol() {
+    document.getElementById('rolPreviewModal').style.display = 'none';
+}
+
+// ========== SLIDERS ==========
+function ajustarAltoFila(val) {
+    document.getElementById('rolRowHeightVal').textContent = val;
+    document.documentElement.style.setProperty('--rol-row-height', val + 'px');
+    document.querySelectorAll('#rolPreviewBody .pv-row').forEach(tr => {
+        tr.style.height = val + 'px';
+    });
+}
+
+function ajustarFuenteRol(val) {
+    document.getElementById('rolFontSizeVal').textContent = val;
+    const pt = parseInt(val);
+    document.documentElement.style.setProperty('--rol-font-size',      pt + 'pt');
+    document.documentElement.style.setProperty('--rol-font-titulo',    (pt + 5) + 'pt');
+    document.documentElement.style.setProperty('--rol-font-subtitulo', (pt + 2) + 'pt');
+}
+
+// ========== IMPRIMIR ==========
+function imprimirRol() {
+    if (!_rolPersonal.length) { mostrarAlerta('Genera el rol primero', 'warning'); return; }
+
+    const { weeks, html: printHtml } = generarHtmlPrevistaRol();
+    const fs = parseInt(document.getElementById('rolFontSize').value);
+
+    // Calcular alto optimo: letter landscape 216mm - 6mm*2 margins - titulo ~18mm - header ~9mm = ~177mm
+    const altoFilaMm = Math.max(20, Math.floor(177 / weeks));
+
+    // Crear div temporal que contiene el HTML limpio para imprimir
+    // Las CSS custom properties se ponen directamente en el div padre para que
+    // los var() en los inline styles de los hijos las resuelvan correctamente
+    const printDiv = document.createElement('div');
+    printDiv.id = 'rolPrintArea';
+    printDiv.style.setProperty('--rol-row-height',      altoFilaMm + 'mm');
+    printDiv.style.setProperty('--rol-font-size',       fs + 'pt');
+    printDiv.style.setProperty('--rol-font-titulo',     (fs + 5) + 'pt');
+    printDiv.style.setProperty('--rol-font-subtitulo',  (fs + 2) + 'pt');
+    printDiv.innerHTML = printHtml;
+    document.body.appendChild(printDiv);
+
+    cerrarPreviewRol();
 
     setTimeout(() => {
         window.print();
-    }, 300);
+        setTimeout(() => {
+            const pd = document.getElementById('rolPrintArea');
+            if (pd) pd.remove();
+        }, 1500);
+    }, 200);
 }

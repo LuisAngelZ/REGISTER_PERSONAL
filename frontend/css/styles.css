@@ -1084,10 +1084,12 @@ select.form-input {
         size: letter landscape;
         margin: 6mm;
     }
+
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
+
     html, body {
         width: 100% !important;
         height: 100% !important;
@@ -1097,82 +1099,48 @@ select.form-input {
         font-family: Arial, Helvetica, sans-serif !important;
         overflow: hidden !important;
     }
-    .login-screen, .navbar, .section-nav, .alert-container, .rol-sidebar,
-    .chip-cargo, .chip-remove, .rol-cell-full { display: none !important; }
-    .main-app { padding: 0 !important; margin: 0 !important; }
-    .main-app > *:not(.content) { display: none !important; }
-    .content { padding: 0 !important; margin: 0 !important; }
-    .content > *:not(#rol-libres) { display: none !important; }
-    #rol-libres {
+
+    /* Ocultar absolutamente todo excepto el div de impresion temporal */
+    body > *:not(#rolPrintArea) { display: none !important; }
+
+    /* Div de impresion: ocupa toda la pagina */
+    #rolPrintArea {
         display: block !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
         width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
+        height: 100% !important;
+        background: white !important;
+        padding: 4mm 5mm !important;
+        box-sizing: border-box !important;
+        font-family: Arial, Helvetica, sans-serif !important;
     }
-    #rol-libres .card {
-        box-shadow: none !important;
-        border: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        border-radius: 0 !important;
-    }
-    #rol-libres .card-header { display: none !important; }
-    #rol-libres .card-body {
-        padding: 0 !important;
-        overflow: visible !important;
-    }
-    .rol-layout {
-        display: block !important;
-    }
-    .rol-calendar-area {
-        display: block !important;
-    }
-    .rol-title {
-        margin: 0 !important;
-        padding: 2mm 0 1mm 0 !important;
-        text-align: center !important;
-    }
-    .rol-title h2 { font-size: 14pt !important; margin: 0 !important; }
-    .rol-title p { font-size: 11pt !important; margin: 2px 0 0 0 !important; }
-    .rol-calendar {
+
+    /* Tabla principal */
+    #rolPrintArea table {
         width: 100% !important;
-        border: 2px solid #333 !important;
         border-collapse: collapse !important;
         table-layout: fixed !important;
     }
-    .rol-calendar th {
-        background-color: #d4c5a0 !important;
-        color: #333 !important;
-        padding: 4px 2px !important;
-        font-size: 8pt !important;
-        font-weight: 700 !important;
-        border: 1px solid #666 !important;
-    }
-    .rol-calendar td {
-        border: 1px solid #999 !important;
-        padding: 0 !important;
-        vertical-align: top !important;
-    }
-    .rol-calendar td.empty {
-        background: #fafafa !important;
-    }
-    .rol-day-num {
-        border-bottom: 1px solid #bbb !important;
-        font-size: 7pt !important;
-        font-weight: 700 !important;
-        padding: 1px 3px !important;
-        color: #555 !important;
-    }
-    .rol-person-chip {
-        font-size: 7.5pt !important;
-        font-weight: 600 !important;
+
+    #rolPrintArea table th {
         padding: 3px 2px !important;
-        border-bottom: 1px solid #ccc !important;
-        background: white !important;
+        font-weight: 700 !important;
+        border: 1.5px solid #555 !important;
         text-align: center !important;
-        text-transform: uppercase !important;
     }
-    .rol-person-chip:last-child { border-bottom: none !important; }
+
+    #rolPrintArea table td {
+        border: 1px solid #999 !important;
+        vertical-align: top !important;
+        overflow: hidden !important;
+    }
+
+    /* Alto de fila: la variable se resuelve porque esta definida en #rolPrintArea */
+    #rolPrintArea .pv-row {
+        height: var(--rol-row-height, 35mm) !important;
+    }
 }
 
 /* ============ PAGINATION ============ */
